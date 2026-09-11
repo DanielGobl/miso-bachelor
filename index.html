@@ -3,9 +3,548 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Miso's Bachelor Weekend</title>
+  <meta name="theme-color" content="#10130f">
+  <meta name="description" content="Four activities. One bachelor. Your Warsaw mission starts here.">
+  <title>MISO'S BACHELOR WEEKEND</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10130f;
+      --surface: #191d16;
+      --line: #32392b;
+      --text: #f0f1e9;
+      --muted: #a0a695;
+      --accent: #d5ee97;
+      --mono: 'Courier New', monospace;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 280px;
+      min-height: 100svh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 90% 0%, #d5ee970b, transparent 55%),
+        repeating-linear-gradient(0deg, transparent, transparent 3px, #ffffff02 3px, #ffffff02 4px);
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; touch-action: manipulation; }
+    button:disabled { cursor: default; }
+    button, input { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+    .page { position: relative; max-width: 540px; margin: auto; padding: 25px 24px 30px; }
+    .eyebrow { font: 10px/1.5 var(--mono); letter-spacing: 1.8px; text-transform: uppercase; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; color: var(--muted); }
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-icon { width: 23px; height: 23px; color: var(--accent); }
+    .live { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); letter-spacing: 1px; }
+    .live::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px #d5ee9740; }
+    .hero { position: relative; padding: 45px 0 28px; overflow: hidden; }
+    .edition { color: var(--accent); margin: 0 0 17px; }
+    h1 {
+      position: relative;
+      margin: 0;
+      font-family: Impact, 'Arial Narrow', 'Franklin Gothic Medium', sans-serif;
+      font-size: clamp(52px, 14.3vw, 78px);
+      font-weight: 900;
+      line-height: .98;
+      letter-spacing: -1.5px;
+      text-transform: uppercase;
+    }
+    h1 span { display: block; }
+    h1 .outline { color: transparent; -webkit-text-stroke: 1px var(--accent); }
+    .hero::before {
+      content: '+';
+      position: absolute;
+      right: 4px;
+      top: 38px;
+      color: #64754a;
+      font: 24px var(--mono);
+    }
+    .location { display: flex; gap: 9px; align-items: center; margin: 24px 0 0; font: bold 12px var(--mono); letter-spacing: 2px; }
+    .location svg { width: 15px; height: 15px; color: var(--accent); }
+    .location .year { margin-left: auto; font-size: 10px; color: var(--muted); font-weight: normal; letter-spacing: 1px; }
+    .intro { border-top: 1px solid var(--line); padding-top: 21px; margin: 0 0 26px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .intro strong { color: var(--text); font-weight: normal; }
+    .section-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-heading h2 { margin: 0; font-weight: normal; color: var(--muted); }
+    #progress { color: var(--accent); letter-spacing: 1px; }
+    .activities { display: grid; gap: 9px; }
+    .activity {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      min-height: 79px;
+      padding: 15px 17px;
+      text-align: left;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: linear-gradient(115deg, #1d2219, #171b15);
+      transition: border-color .2s, background .2s;
+    }
+    .activity-number { flex-shrink: 0; font: 26px/1 var(--mono); color: #69735d; letter-spacing: -2px; }
+    .activity-copy { flex: 1; }
+    .activity-title { display: block; font-size: 12px; font-weight: bold; letter-spacing: 1.6px; }
+    .activity-state { display: block; margin-top: 7px; color: var(--muted); font: 9px/1.4 var(--mono); letter-spacing: 1.5px; }
+    .lock { font-size: 14px; filter: grayscale(1); opacity: .6; }
+    .activity.unlocked { border-color: #78924d; background: linear-gradient(115deg, #29341e, #1b2316); }
+    .activity.unlocked:hover { border-color: var(--accent); }
+    .activity:not(:disabled):hover { border-color: #78924d; }
+    .activity.unlocked .activity-number, .activity.unlocked .activity-state, .activity.unlocked .lock { color: var(--accent); opacity: 1; }
+    .activity.unlocked .lock { font-size: 20px; filter: none; }
+    .access { margin-top: 27px; padding: 23px 20px 17px; border: 1px solid var(--line); border-radius: 3px; background: #171b1480; }
+    .access label { display: flex; align-items: center; gap: 9px; margin-bottom: 13px; color: var(--accent); font-weight: bold; letter-spacing: 1.5px; }
+    .access label::before { content: '>'; font-size: 16px; }
+    .input-row { display: flex; gap: 8px; }
+    input { min-width: 0; width: 100%; min-height: 49px; padding: 12px; border: 1px solid #424b36; border-radius: 2px; color: var(--text); background: #0f120d; font-family: var(--mono); font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+    input::placeholder { font-size: 12px; letter-spacing: 1px; color: #747c6b; text-transform: none; }
+    input:focus { outline: 1px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+    input[aria-invalid="true"] { border-color: #e3a080; }
+    .unlock-button { flex-shrink: 0; min-height: 49px; padding: 0 16px; border: 1px solid var(--accent); border-radius: 2px; background: var(--accent); color: #1a2212; font: bold 11px var(--mono); letter-spacing: 1px; white-space: nowrap; transition: background .2s, transform .2s; }
+    .unlock-button:hover { background: #e4f9b5; }
+    .unlock-button:active { transform: translateY(1px); }
+    .unlock-button:disabled { opacity: .5; }
+    .form-hint { margin: 12px 0 0; color: var(--muted); font: 10px/1.6 var(--mono); }
+    .feedback { margin: 10px 0 0; color: #edb095; font: 12px/1.6 var(--mono); }
+    .feedback:empty { display: none; }
+    .mission { scroll-margin-top: 20px; margin-top: 24px; padding: 23px 21px; border: 1px solid #61783f; border-top: 3px solid var(--accent); background: linear-gradient(145deg, #222b1b, #171c13); border-radius: 3px; }
+    .mission.reveal { animation: reveal .5s ease-out both; }
+    .mission .eyebrow { color: var(--accent); margin: 0 0 13px; }
+    .mission h2 { font-size: 25px; line-height: 1.15; letter-spacing: -.6px; margin: 0 0 22px; }
+    .mission p { font-size: 14px; line-height: 1.8; color: #c6cebd; margin: 0 0 17px; }
+    .mission .salutation { color: var(--text); font-size: 17px; }
+    .task { margin: 23px 0; padding: 18px 0 18px 15px; border-left: 2px solid var(--accent); }
+    .task h3 { margin: 0 0 10px; color: var(--accent); font: bold 11px var(--mono); letter-spacing: 1px; }
+    .task p { margin: 0 0 14px; color: var(--text); font-size: 17px; font-weight: bold; line-height: 1.5; }
+    .rules { margin: 0; padding: 0; list-style: none; color: #c6cebd; font-size: 13px; line-height: 1.9; }
+    .rules li::before { content: '— '; color: #7f9169; }
+    .mission .next { margin: 23px 0 0; border-top: 1px solid #3b482e; padding-top: 17px; color: var(--muted); font: 10px var(--mono); letter-spacing: 1.2px; }
+    .destination h2 { max-width: 310px; font-size: 32px; letter-spacing: -1px; }
+    .time { display: flex; align-items: center; gap: 12px; margin: 25px 0; padding: 16px 0; border-top: 1px solid #3b482e; border-bottom: 1px solid #3b482e; }
+    .time svg { width: 21px; color: var(--accent); }
+    .time strong { font: 35px var(--mono); color: var(--accent); letter-spacing: -2px; }
+    .time span { margin-left: auto; color: var(--muted); font: 9px var(--mono); letter-spacing: 1px; }
+    .time-range { flex-wrap: wrap; }
+    .time-range strong { font-size: clamp(20px, 6vw, 30px); white-space: nowrap; }
+    .time-range span { flex-basis: 100%; margin-left: 33px; }
+    .completion { margin-top: 24px; padding: 23px 21px; border: 1px solid var(--accent); background: #222b1b; }
+    .completion .eyebrow { color: var(--accent); margin: 0 0 12px; }
+    .completion h2 { margin: 0 0 14px; font: bold 18px/1.5 var(--mono); color: var(--accent); }
+    .completion p:last-child { margin: 0; font-size: 14px; line-height: 1.7; }
+    .destination p:last-child { margin-bottom: 0; }
+    .saved-note { margin: 19px 0 0; color: var(--muted); text-align: center; font: 10px/1.7 var(--mono); }
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 34px; padding-top: 15px; border-top: 1px solid var(--line); }
+    footer span { color: #7f8974; font: 9px/1.6 var(--mono); letter-spacing: 1px; }
+    .reset { flex-shrink: 0; min-height: 44px; padding: 8px 0 8px 12px; background: none; border: 0; color: var(--muted); font: 9px var(--mono); letter-spacing: 1px; text-decoration: underline; text-underline-offset: 4px; }
+    .reset:hover { color: var(--text); }
+    .grant { position: fixed; inset: 0; z-index: 10; display: grid; place-content: center; gap: 21px; padding: 24px; text-align: center; background: #0c1209f7; animation: grant-in .25s ease-out both; }
+    .grant::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: #d5ee9750; box-shadow: 0 0 25px #d5ee9730; animation: scan 1.2s ease-in-out both; }
+    .grant-icon { display: grid; place-items: center; width: 72px; height: 72px; margin: auto; border: 1px solid var(--accent); border-radius: 50%; color: var(--accent); font: 32px var(--mono); box-shadow: 0 0 45px #d5ee9710; }
+    .grant strong { font: bold clamp(23px, 6vw, 32px) var(--mono); letter-spacing: 2px; color: var(--accent); }
+    .grant .eyebrow { color: var(--muted); }
+    @keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes grant-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scan { from { top: 0; opacity: 0; } 30% { opacity: 1; } to { top: 100%; opacity: 0; } }
+    @media (min-width: 700px) {
+      .page { margin: 35px auto; padding: 30px 36px; border: 1px solid var(--line); background: #10130fd9; box-shadow: 0 25px 100px #0005; }
+      body { background-image: linear-gradient(#d5ee9704 1px, transparent 1px), linear-gradient(90deg, #d5ee9704 1px, transparent 1px); background-size: 55px 55px; }
+    }
+    @media (max-width: 350px) {
+      .page { padding-left: 17px; padding-right: 17px; }
+      h1 { font-size: 48px; }
+      .access { padding-left: 13px; padding-right: 13px; }
+      .unlock-button { padding: 0 11px; }
+      .location .year { letter-spacing: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Miso's Bachelor Weekend</h1>
+  <main class="page" id="page">
+    <header>
+      <div class="topbar eyebrow">
+        <span class="brand">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M12 2 21 7v10l-9 5-9-5V7Z"/><path d="m7 15 5-8 5 8M9 12h6"/></svg>
+          Bachelor operations
+        </span>
+        <span class="live">Top secret</span>
+      </div>
+      <div class="hero">
+        <p class="edition eyebrow">The Warsaw edition / 2026</p>
+        <h1><span>MISO'S</span> <span>BACHELOR</span> <span class="outline">WEEKEND</span></h1>
+        <p class="location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          WARSAW 2026 <span class="year">52.23° N / 21.01° E</span>
+        </p>
+      </div>
+      <p class="intro"><strong>Four activities. One bachelor.</strong><br>Every code opens another part of the weekend.</p>
+    </header>
+
+    <section aria-labelledby="activities-heading">
+      <div class="section-heading eyebrow">
+        <h2 class="eyebrow" id="activities-heading">Your mission itinerary</h2>
+        <span id="progress" aria-live="polite">00 / 04 UNLOCKED</span>
+      </div>
+      <div class="activities">
+        <button class="activity" id="activity-one" type="button" disabled aria-controls="destination" aria-expanded="false">
+          <span class="activity-number" aria-hidden="true">01</span>
+          <span class="activity-copy"><span class="activity-title">ACTIVITY #1</span><span class="activity-state" id="activity-one-state">AWAITING ACCESS CODE</span></span>
+          <span class="lock" id="activity-one-lock" role="img" aria-label="Locked">🔒</span>
+        </button>
+        <button class="activity" id="activity-two" type="button" disabled aria-controls="challenge-two" aria-expanded="false">
+          <span class="activity-number" aria-hidden="true">02</span>
+          <span class="activity-copy"><span class="activity-title">ACTIVITY #2</span><span class="activity-state">CLASSIFIED</span></span>
+          <span class="lock" role="img" aria-label="Locked">🔒</span>
+        </button>
+        <button class="activity" id="activity-three" type="button" disabled aria-controls="challenge-three" aria-expanded="false">
+          <span class="activity-number" aria-hidden="true">03</span>
+          <span class="activity-copy"><span class="activity-title">ACTIVITY #3</span><span class="activity-state">CLASSIFIED</span></span>
+          <span class="lock" role="img" aria-label="Locked">🔒</span>
+        </button>
+        <button class="activity" id="activity-four" type="button" disabled aria-controls="challenge-four" aria-expanded="false">
+          <span class="activity-number" aria-hidden="true">04</span>
+          <span class="activity-copy"><span class="activity-title">ACTIVITY #4</span><span class="activity-state">CLASSIFIED</span></span>
+          <span class="lock" role="img" aria-label="Locked">🔒</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="mission" id="challenge" aria-labelledby="challenge-heading" hidden>
+      <p class="eyebrow">Mission briefing / 01</p>
+      <h2 id="challenge-heading" tabindex="-1">UNLOCK #1 – Poľský experiment</h2>
+      <p class="salutation">Mišo,</p>
+      <p>roky nám posielaš poľské videá a s úplným sebavedomím rozprávaš chujoviny po poľsky.</p>
+      <p>Dnes je čas na prvý experiment – zistiť, či tvoja poľština funguje aj v reálnom svete.</p>
+      <div class="task">
+        <h3>TVOJA ÚLOHA:</h3>
+        <p>Objednaj jedlo pre celú partiu po poľsky.</p>
+        <ul class="rules"><li>Žiadna angličtina.</li><li>Žiadna slovenčina.</li><li>Žiadny Google Translate.</li></ul>
+      </div>
+      <p>Ak tento experiment zvládneš, čaká ťa miesto plné skutočných experimentov.</p>
+      <p class="next">NEXT ACTIVITY: LOCKED</p>
+    </section>
+
+    <section class="mission destination" id="destination" aria-labelledby="destination-heading" hidden>
+      <p class="eyebrow">✓ ACTIVITY #1 UNLOCKED</p>
+      <h2 id="destination-heading" tabindex="-1">COPERNICUS SCIENCE CENTRE</h2>
+      <div class="time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        <strong><time datetime="12:30">12:30</time></strong><span>WARSAW LOCAL TIME</span>
+      </div>
+      <p>Tvoja poľština prešla prvou reálnou skúškou.<br>Teraz ideme na skutočné experimenty.</p>
+    </section>
+
+    <section class="mission" id="challenge-two" aria-labelledby="challenge-two-heading" hidden>
+      <p class="eyebrow">Mission briefing / 02</p>
+      <h2 id="challenge-two-heading" tabindex="-1">UNLOCK #2 – Captain Mišo</h2>
+      <p class="salutation">Mišo,</p>
+      <p>každá správna výprava potrebuje svojho kapitána.</p>
+      <p>A správny kapitán musí vedieť presvedčiť ľudí, že je hodný svojej posádky.</p>
+      <div class="task">
+        <h3>TVOJA ÚLOHA:</h3>
+        <p>Nájdi cudzieho človeka a presvedč ho, aby ťa slávnostne vymenoval za kapitána.</p>
+        <p>Musí povedať:</p>
+        <p>"I hereby declare you Captain Mišo!"</p>
+      </div>
+      <p>Ak uspeješ, zistíš, kam dnes povedieš svoju posádku.</p>
+      <p class="next">NEXT ACTIVITY: LOCKED</p>
+    </section>
+
+    <section class="mission destination" id="destination-two" aria-labelledby="destination-two-heading" hidden>
+      <p class="eyebrow">✓ ACTIVITY #2 UNLOCKED</p>
+      <h2 id="destination-two-heading" tabindex="-1">BOAT TOUR PO VISLE</h2>
+      <div class="time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        <strong><time datetime="18:00">18:00</time></strong><span>WARSAW LOCAL TIME</span>
+      </div>
+      <p>Captain Mišo, your ship awaits.</p>
+    </section>
+
+    <section class="mission" id="challenge-three" aria-labelledby="challenge-three-heading" hidden>
+      <p class="eyebrow">Mission briefing / 03</p>
+      <h2 id="challenge-three-heading" tabindex="-1">UNLOCK #3 – Nájdi spojenca</h2>
+      <p class="salutation">Mišo,</p>
+      <p>každý správny bojovník potrebuje niekoho, kto mu bude kryť chrbát.</p>
+      <p>Tvojich parťákov už poznáme. Teraz si musíš nájsť nového spojenca.</p>
+      <div class="task">
+        <h3>TVOJA ÚLOHA:</h3>
+        <p>Nájdi cudzieho človeka a odfoť sa s ním tak, ako keby ste boli nerozluční parťáci pripravení ísť spolu do boja.</p>
+      </div>
+      <p>Ak nájdeš svojho spojenca, zistíš, v akom boji budeš potrebovať tých skutočných.</p>
+      <p class="next">NEXT ACTIVITY: LOCKED</p>
+    </section>
+
+    <section class="mission destination" id="destination-three" aria-labelledby="destination-three-heading" hidden>
+      <p class="eyebrow">✓ ACTIVITY #3 UNLOCKED</p>
+      <h2 id="destination-three-heading" tabindex="-1">ARCHERY GAMES</h2>
+      <div class="time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        <strong><time datetime="11:00">11:00</time></strong><span>WARSAW LOCAL TIME</span>
+      </div>
+      <p>Nového parťáka si našiel.<br>Teraz je čas zistiť, či ti tí starí dokážu kryť chrbát.</p>
+      <p>Porazený tím kupuje víťaznému tímu pivo alebo shot.</p>
+    </section>
+
+    <section class="mission" id="challenge-four" aria-labelledby="challenge-four-heading" hidden>
+      <p class="eyebrow">Mission briefing / 04</p>
+      <h2 id="challenge-four-heading" tabindex="-1">UNLOCK #4 – Zapíš sa do histórie</h2>
+      <p class="salutation">Mišo,</p>
+      <p>história si pamätá ľudí podľa toho, aký dojem po sebe zanechali.</p>
+      <p>Pred poslednou aktivitou zistíme, aký dojem zanecháš ty.</p>
+      <div class="task">
+        <h3>TVOJA ÚLOHA:</h3>
+        <p>Nájdi cudzieho človeka a dosiahni, aby ti dal úprimný kompliment.</p>
+      </div>
+      <p>Ak zanecháš dobrý dojem v prítomnosti, čaká ťa miesto, kde stopy minulosti zostali dodnes.</p>
+      <p class="next">FINAL ACTIVITY: LOCKED</p>
+    </section>
+
+    <section class="mission destination" id="destination-four" aria-labelledby="destination-four-heading" hidden>
+      <p class="eyebrow">✓ FINAL ACTIVITY UNLOCKED</p>
+      <h2 id="destination-four-heading" tabindex="-1">WWII WARSAW WALKING TOUR</h2>
+      <div class="time time-range">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        <strong><time datetime="14:30">14:30</time> – <time datetime="16:30">16:30</time></strong><span>WARSAW LOCAL TIME</span>
+      </div>
+    </section>
+
+    <section class="completion" id="completion" aria-labelledby="completion-heading" hidden>
+      <p class="eyebrow">4/4 ACTIVITIES UNLOCKED</p>
+      <h2 id="completion-heading">BACHELOR MODE: 100%</h2>
+      <p>Now survive the rest of Warsaw.</p>
+    </section>
+
+    <form class="access" id="access-form" novalidate>
+      <label class="eyebrow" id="code-label" for="access-code">ENTER ACCESS CODE</label>
+      <div class="input-row">
+        <input id="access-code" name="access-code" type="text" placeholder="Your code here" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="64" aria-describedby="code-hint code-feedback" enterkeyhint="go">
+        <button class="unlock-button" id="unlock-button" type="submit">UNLOCK <span aria-hidden="true">↗</span></button>
+      </div>
+      <p class="form-hint" id="code-hint">Stay close to the crew. Your code is coming.</p>
+      <p class="feedback" id="code-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+    </form>
+    <p class="saved-note" id="storage-note" role="status">Progress saved on this device.</p>
+    <noscript><p class="feedback">Na odomknutie aktivít zapni JavaScript v prehliadači.</p></noscript>
+
+    <footer><span>WHAT HAPPENS IN WARSAW…<br>STAYS CLASSIFIED.</span><button class="reset" id="reset-game" type="button">RESET GAME</button></footer>
+  </main>
+
+  <div class="grant" id="access-granted" role="status" aria-live="assertive" aria-atomic="true" hidden>
+    <div class="grant-icon" aria-hidden="true">✓</div>
+    <strong>ACCESS GRANTED</strong>
+    <span class="eyebrow" id="grant-detail">Identity confirmed / Activity #1 unlocked</span>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'misos-bachelor-weekend-v1';
+      const STAGE = { LOCKED: 0, CHALLENGE: 1, UNLOCKED: 2 };
+      const byId = (id) => document.getElementById(id);
+      const activities = [
+        { card: 'activity-one', challenge: 'challenge', destination: 'destination', challengeCode: 'EXPERIMENT', revealCode: 'KOPERNIK' },
+        { card: 'activity-two', challenge: 'challenge-two', destination: 'destination-two', challengeCode: 'CAPTAIN', revealCode: 'VISTULA' },
+        { card: 'activity-three', challenge: 'challenge-three', destination: 'destination-three', challengeCode: 'ALLY', revealCode: 'ARCHER' },
+        { card: 'activity-four', challenge: 'challenge-four', destination: 'destination-four', challengeCode: 'HISTORY', revealCode: 'WARSAW44' }
+      ];
+      const form = byId('access-form');
+      const input = byId('access-code');
+      const feedback = byId('code-feedback');
+      const grant = byId('access-granted');
+      const page = byId('page');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let stages = activities.map(() => STAGE.LOCKED);
+      let activeActivity = 0;
+      let animating = false;
+
+      function storageUnavailable() {
+        byId('storage-note').textContent = 'Storage unavailable. Progress lasts only while this page is open.';
+      }
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.stages)) {
+          stages = activities.map((_, index) => Object.values(STAGE).includes(saved.stages[index]) ? saved.stages[index] : STAGE.LOCKED);
+          if (Number.isInteger(saved.activeActivity) && saved.activeActivity >= 0 && saved.activeActivity < activities.length) {
+            activeActivity = saved.activeActivity;
+          }
+          if (stages[activeActivity] === STAGE.LOCKED) {
+            activeActivity = Math.max(0, stages.findIndex(stage => stage !== STAGE.LOCKED));
+          }
+        } else if (saved && Object.values(STAGE).includes(saved.stage)) {
+          // Preserve Activity #1 progress saved by the first version of the app.
+          stages[0] = saved.stage;
+        }
+      } catch {
+        storageUnavailable();
+      }
+
+      function save() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity }));
+          byId('storage-note').textContent = 'Progress saved on this device.';
+        } catch {
+          storageUnavailable();
+        }
+      }
+
+      function render() {
+        const unlockedCount = stages.filter(stage => stage === STAGE.UNLOCKED).length;
+        activities.forEach((mission, index) => {
+          const stage = stages[index];
+          const unlocked = stage === STAGE.UNLOCKED;
+          const selected = index === activeActivity;
+          const card = byId(mission.card);
+          byId(mission.challenge).hidden = !selected || stage !== STAGE.CHALLENGE;
+          byId(mission.destination).hidden = !selected || !unlocked;
+          card.disabled = stage === STAGE.LOCKED;
+          card.classList.toggle('unlocked', unlocked);
+          card.setAttribute('aria-controls', unlocked ? mission.destination : mission.challenge);
+          card.setAttribute('aria-expanded', String(selected && stage !== STAGE.LOCKED));
+          card.querySelector('.activity-state').textContent = unlocked ? 'UNLOCKED · VIEW ACTIVITY' : stage === STAGE.CHALLENGE ? 'MISSION IN PROGRESS' : index === 0 ? 'AWAITING ACCESS CODE' : 'CLASSIFIED';
+          const lock = card.querySelector('.lock');
+          lock.textContent = unlocked ? '↗' : '🔒';
+          lock.setAttribute('aria-label', unlocked ? 'Unlocked' : 'Locked');
+        });
+        const stage = stages[activeActivity];
+        byId('progress').textContent = `${String(unlockedCount).padStart(2, '0')} / 04 UNLOCKED`;
+        byId('completion').hidden = unlockedCount !== activities.length;
+        byId('code-label').textContent = stage === STAGE.CHALLENGE ? 'ENTER SECOND ACCESS CODE' : 'ENTER ACCESS CODE';
+        byId('code-hint').textContent = unlockedCount === activities.length ? 'All missions unlocked. Enjoy the rest of Warsaw.' : stage === STAGE.UNLOCKED ? `Mission #${activeActivity + 1} unlocked. More instructions from the crew soon.` : stage === STAGE.CHALLENGE ? 'Complete the challenge. Get your next code from the crew.' : 'Stay close to the crew. Your code is coming.';
+      }
+
+      function showActivity(index) {
+        activeActivity = index;
+        save();
+        render();
+        const mission = activities[index];
+        const sectionId = stages[index] === STAGE.UNLOCKED ? mission.destination : mission.challenge;
+        reveal(byId(sectionId), `${sectionId}-heading`);
+      }
+
+      function reveal(section, heading) {
+        section.classList.remove('reveal');
+        // Restart the entrance animation when revisiting the unlocked activity.
+        void section.offsetWidth;
+        section.classList.add('reveal');
+        byId(heading).focus({ preventScroll: true });
+        section.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' });
+      }
+
+      function showError(message) {
+        feedback.textContent = message;
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+      }
+
+      function unlockDestination(index) {
+        animating = true;
+        stages[index] = STAGE.UNLOCKED;
+        activeActivity = index;
+        // Save immediately, so a refresh during the animation keeps the unlock.
+        save();
+        byId('unlock-button').disabled = true;
+        input.blur();
+        page.inert = true;
+        byId('grant-detail').textContent = `Identity confirmed / Activity #${index + 1} unlocked`;
+        grant.hidden = false;
+        window.setTimeout(() => {
+          grant.hidden = true;
+          page.inert = false;
+          animating = false;
+          byId('unlock-button').disabled = false;
+          render();
+          const sectionId = activities[index].destination;
+          reveal(byId(sectionId), `${sectionId}-heading`);
+        }, reducedMotion.matches ? 250 : 1600);
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (animating) return;
+        const code = input.value.trim().toUpperCase();
+        feedback.textContent = '';
+        input.removeAttribute('aria-invalid');
+
+        if (!code) {
+          showError('Najprv zadaj prístupový kód.');
+          return;
+        }
+
+        const index = activities.findIndex(mission => code === mission.challengeCode || code === mission.revealCode);
+        if (index === -1) {
+          showError('ACCESS DENIED — Neplatný kód. Skús to znova.');
+          return;
+        }
+        const isRevealCode = code === activities[index].revealCode;
+        if (isRevealCode && stages[index] === STAGE.LOCKED) {
+          showError('CHALLENGE NOT COMPLETED');
+          return;
+        }
+
+        input.value = '';
+        if (stages[index] === STAGE.UNLOCKED) {
+          showActivity(index);
+        } else if (isRevealCode) {
+          unlockDestination(index);
+        } else {
+          stages[index] = STAGE.CHALLENGE;
+          showActivity(index);
+        }
+      });
+
+      input.addEventListener('input', () => {
+        feedback.textContent = '';
+        input.removeAttribute('aria-invalid');
+      });
+
+      activities.forEach((mission, index) => {
+        byId(mission.card).addEventListener('click', () => {
+          if (!animating && stages[index] !== STAGE.LOCKED) {
+            feedback.textContent = '';
+            input.removeAttribute('aria-invalid');
+            showActivity(index);
+          }
+        });
+      });
+
+      byId('reset-game').addEventListener('click', () => {
+        if (animating || !window.confirm('Resetovať hru? Všetok uložený postup sa vymaže a aktivity sa znova zamknú.')) return;
+        stages = activities.map(() => STAGE.LOCKED);
+        activeActivity = 0;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          byId('storage-note').textContent = 'Progress reset. Ready for a new mission.';
+        } catch {
+          storageUnavailable();
+        }
+        input.value = '';
+        input.removeAttribute('aria-invalid');
+        feedback.textContent = '';
+        render();
+        input.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+      });
+
+      render();
+    })();
+  </script>
 </body>
 </html>
