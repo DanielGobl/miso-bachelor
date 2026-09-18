@@ -179,10 +179,53 @@
     .time-range { flex-wrap: wrap; }
     .time-range strong { font-size: clamp(20px, 6vw, 30px); white-space: nowrap; }
     .time-range span { flex-basis: 100%; margin-left: 33px; }
-    .completion { margin-top: 24px; padding: 23px 21px; border: 1px solid var(--accent); background: #222b1b; }
+    .completion { margin: 24px 0; padding: 30px 21px; border: 1px solid var(--accent); border-top-width: 4px; background: radial-gradient(ellipse at top, #354626, #171e13 75%); box-shadow: 0 0 40px #d5ee970b; }
     .completion .eyebrow { color: var(--accent); margin: 0 0 12px; }
-    .completion h2 { margin: 0 0 14px; font: bold 18px/1.5 var(--mono); color: var(--accent); }
-    .completion p:last-child { margin: 0; font-size: 14px; line-height: 1.7; }
+    .completion h2 { margin: 20px 0; font: 900 clamp(36px, 10vw, 54px)/1.05 var(--mono); letter-spacing: -2px; color: var(--accent); }
+    .completion h2:focus { outline: none; }
+    .ending-launch { margin: 32px 0; padding: 24px 0; border-block: 1px solid var(--line); text-align: center; }
+    .ending-launch .eyebrow { color: var(--accent); margin: 0 0 18px; }
+    .ending-trigger { width: 100%; min-height: 66px; padding: 18px 14px; border: 2px solid var(--accent); background: linear-gradient(120deg, #29391c, #10170c); color: var(--accent); font: bold 13px/1.7 var(--mono); letter-spacing: 1px; box-shadow: 0 0 20px #d5ee9720; animation: ending-pulse 3s ease-in-out infinite; }
+    @keyframes ending-pulse { 50% { box-shadow: 0 0 30px #d5ee9740; border-color: #f0ffd0; } }
+    .ending-confirm { width: calc(100% - 40px); max-width: 440px; max-height: calc(100svh - 48px); overflow: auto; padding: 26px 22px; border: 1px solid var(--accent); background: #11190e; color: var(--text); box-shadow: 0 0 60px #d5ee9718; }
+    .ending-confirm::backdrop { background: #050904df; }
+    .ending-confirm .eyebrow { color: var(--accent); line-height: 1.8; }
+    .ending-confirm p { font: 12px/1.9 var(--mono); }
+    .ending-confirm h2 { margin: 24px 0; color: var(--accent); font: bold 19px/1.6 var(--mono); }
+    .ending-confirm-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .ending-confirm-actions button { flex: 1 1 140px; min-height: 52px; white-space: normal; }
+    .completion-copy { margin: 26px 0; font-size: 16px; line-height: 1.85; }
+    .completion-meter { height: 5px; background: #d5ee9720; overflow: hidden; }
+    .completion-meter span { display: block; height: 100%; background: var(--accent); transform-origin: left; }
+    .night-status { display: grid; gap: 14px; padding: 22px 0; border-block: 1px solid var(--line); color: var(--accent); font: 11px/1.7 var(--mono); }
+    .night-status p { margin: 0; }
+    .warsaw-line { margin: 24px 0 0; color: var(--accent); font: bold 14px/1.8 var(--mono); }
+    .finale { position: fixed; inset: 0; z-index: 40; overflow: auto; overscroll-behavior: contain; background: #090e08; color: var(--text); padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom)); }
+    .finale-panel { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 500px; min-height: calc(100svh - 56px); margin: auto; text-align: center; }
+    .finale .eyebrow { color: var(--muted); }
+    .finale-heading { margin: 24px 0; color: var(--accent); font: bold clamp(23px, 6vw, 34px)/1.5 var(--mono); overflow-wrap: break-word; }
+    .finale-heading:focus { outline: none; }
+    .finale.success { background: radial-gradient(ellipse at center, #314320, #090e08 75%); }
+    .finale.success .finale-heading { font-size: clamp(44px, 13vw, 76px); line-height: 1.04; letter-spacing: -3px; text-shadow: 0 0 35px #d5ee9730; }
+    .finale-reading { white-space: pre-line; font-size: 18px; line-height: 1.85; }
+    .finale.calm { background: #10130f; }
+    .finale.calm .finale-panel { max-width: 440px; }
+    .finale.calm .finale-heading { color: var(--muted); font: 10px/1.5 var(--mono); letter-spacing: 2px; }
+    .finale.personal-beat .finale-reading { padding: 40px 0; font: bold clamp(32px, 10vw, 48px)/1.3 var(--mono); color: var(--accent); text-shadow: 0 0 25px #d5ee971c; }
+    .finale-letter { text-align: left; }
+    .finale-letter p { margin: 0 0 26px; white-space: pre-line; font-size: 17px; line-height: 1.85; }
+    .finale-letter .personal-line { color: var(--accent); font-weight: bold; }
+    .finale-continue { width: 100%; margin: 12px 0 24px; min-height: 52px; }
+    .finale-enter { animation: briefing-in .6s ease-out both; }
+    .finale.leaving { animation: briefing-out .6s ease both; }
+    .finale-scan { height: 3px; overflow: hidden; background: #d5ee9718; }
+    .finale-scan::after { content: ''; display: block; width: 25%; height: 100%; background: var(--accent); animation: finale-scan 1.6s ease-in-out infinite alternate; }
+    @keyframes finale-scan { to { transform: translateX(300%); } }
+    .finale-particles { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+    .finale-particle { position: absolute; left: 50%; top: 42%; color: var(--accent); font: bold 12px var(--mono); animation: finale-particle var(--duration) ease-out both; animation-delay: var(--delay); }
+    @keyframes finale-particle { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 10% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--rotation)); } }
+    @media (prefers-reduced-motion: reduce) { .finale-particles { display: none; } .finale-scan::after { width: 100%; } }
+    .completion > p:last-child { margin: 24px 0 0; font-size: 14px; line-height: 1.7; }
     .destination p:last-child { margin-bottom: 0; }
     .saved-note { margin: 19px 0 0; color: var(--muted); text-align: center; font: 10px/1.7 var(--mono); }
     footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 34px; padding-top: 15px; border-top: 1px solid var(--line); }
@@ -234,7 +277,7 @@
     .boot-progress span { display: block; width: 100%; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; box-shadow: 0 0 18px #d5ee9750; }
     .boot-percentage { margin: 12px 0 22px; text-align: right; color: var(--accent); font: 12px var(--mono); }
     .boot-status { display: flex; align-items: center; justify-content: center; min-height: 7.25em; margin: 0; padding: 0 12px; color: var(--text); font: 700 clamp(20px, 5.6vw, 24px)/1.45 Arial, Helvetica, sans-serif; text-align: center; overflow-wrap: break-word; }
-    .boot-status.status-enter { animation: status-message var(--message-duration, 3050ms) linear both; }
+    .boot-status.status-enter { animation: status-message var(--message-duration, 3300ms) linear both; }
     .boot-status.final-check { color: var(--accent); animation: briefing-in .3s ease-out both; }
     .boot-success { margin: -18px 0 30px; color: var(--accent); font: bold 14px/1.6 var(--mono); }
     .boot-screen.ready h2 { text-shadow: 0 0 28px #d5ee9730; }
@@ -244,7 +287,7 @@
     @keyframes briefing-out { from { opacity: 1; } to { opacity: 0; } }
     @keyframes status-message {
       0% { opacity: 0; transform: translateY(8px); }
-      9.84%, 90.16% { opacity: 1; transform: translateY(0); }
+      9.09%, 90.91% { opacity: 1; transform: translateY(0); }
       100% { opacity: 0; transform: translateY(-6px); }
     }
     @media (min-width: 700px) {
@@ -261,6 +304,45 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    .mission-timer { margin: 0 0 22px; padding: 14px 0; border-block: 1px solid var(--line); text-align: left; color: var(--accent); font-family: var(--mono); }
+    .timer-label, .timer-status { display: block; font-size: 10px; line-height: 1.7; letter-spacing: 1px; }
+    .timer-status { white-space: pre-line; }
+    .timer-value { display: block; margin: 6px 0 10px; font-size: 30px; font-variant-numeric: tabular-nums; }
+    .timer-track { height: 3px; background: #d5ee971c; overflow: hidden; }
+    .timer-fill { display: block; height: 100%; background: currentColor; transform-origin: left; }
+    .mission-timer.expired { color: #edb095; }
+    .riddle-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .riddle-header h2 { margin: 0; font-size: 20px; }
+    .riddle-header .mission-timer { margin: 0; border: 0; padding: 0; }
+    .riddle-header .timer-value { font-size: 24px; }
+    .riddle-hints { margin-top: 24px; text-align: left; border-top: 1px solid var(--line); }
+    .riddle-hints h3 { color: var(--muted); font: 10px var(--mono); letter-spacing: 1px; margin: 18px 0 8px; }
+    .hint-row { border-bottom: 1px solid var(--line); }
+    .hint-toggle { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; min-height: 48px; padding: 10px 0; border: 0; background: transparent; color: var(--accent); text-align: left; font: 11px/1.5 var(--mono); }
+    .riddle .hint-copy { margin: 0; padding: 0 0 15px; font-size: 13px; animation: briefing-in .25s ease-out both; }
+    .cold-open { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; overflow-y: auto; padding: 24px; background: #090e08; color: var(--accent); }
+    .flight-panel { width: 100%; max-width: 520px; text-align: center; }
+    .flight-map { display: block; width: 100%; height: auto; margin: 24px 0; background-image: linear-gradient(#d5ee9708 1px, transparent 1px), linear-gradient(90deg, #d5ee9708 1px, transparent 1px); background-size: 28px 28px; }
+    .flight-map text { fill: var(--accent); font: 13px var(--mono); }
+    .flight-locations { opacity: 0; transition: opacity .5s; }
+    .route-visible .flight-locations { opacity: 1; }
+    #flight-route { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s; }
+    .route-visible #flight-route { stroke-dashoffset: 0; }
+    #flight-plane { filter: drop-shadow(0 0 5px #d5ee9770); }
+    .flight-arrived #warsaw-pulse { animation: destination-pulse 1.5s ease-out infinite; }
+    .cold-open h2 { min-height: 3.5em; margin: 0; font: bold clamp(20px, 5.5vw, 28px)/1.5 var(--mono); }
+    .cold-open h2:focus { outline: none; }
+    .cold-open .cold-message-enter { animation: cold-message var(--cold-step-duration) linear both; }
+    @keyframes cold-message {
+      0%, 100% { opacity: 0; }
+      9.09%, 90.91% { opacity: 1; }
+    }
+    .cold-open.leaving { animation: briefing-out .4s ease both; }
+    @keyframes destination-pulse { from { opacity: .8; r: 8; } to { opacity: 0; r: 22; } }
+    @media (prefers-reduced-motion: reduce) {
+      .flight-locations, #flight-route { transition: none; }
+      .cold-open.leaving, .flight-arrived #warsaw-pulse, .riddle .hint-copy { animation: none; }
     }
   </style>
 </head>
@@ -404,7 +486,7 @@
 
     <section class="mission destination" id="destination-two" aria-labelledby="destination-two-heading" hidden>
       <p class="eyebrow">✓ AKTIVITA #2 ODOMKNUTÁ</p>
-      <h2 id="destination-two-heading" tabindex="-1">PLAVBA PO VISLE</h2>
+      <h2 id="destination-two-heading" tabindex="-1">SUNSET BOAT TOUR</h2>
       <div class="time time-range">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
         <strong><time datetime="18:00">18:00</time> – <time datetime="19:00">19:00</time></strong><span>MIESTNY ČAS VO VARŠAVE</span>
@@ -475,10 +557,19 @@
       </form>
     </section>
 
+    <section class="ending-launch" id="ending-launch" aria-label="Koniec víkendu" hidden>
+      <p class="eyebrow">4 / 4 AKTIVITY ODOMKNUTÉ ✓</p>
+      <button class="ending-trigger" id="activate-ending" type="button" aria-haspopup="dialog">AKTIVOVAŤ KONIEC VÍKENDU</button>
+    </section>
+
     <section class="completion" id="completion" aria-labelledby="completion-heading" hidden>
-      <p class="eyebrow">4/4 AKTIVITY ODOMKNUTÉ</p>
-      <h2 id="completion-heading">REŽIM ŽENÍCH: 100%</h2>
-      <p>Teraz už len preži zvyšok Varšavy.</p>
+      <p class="eyebrow">4 / 4 AKTIVITY ODOMKNUTÉ ✓</p>
+      <h2 id="completion-heading" tabindex="-1">MISIA SPLNENÁ</h2>
+      <p class="eyebrow">REŽIM ŽENÍCH: 100 %</p>
+      <div class="completion-meter" role="progressbar" aria-label="Režim ženích" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span></span></div>
+      <p class="completion-copy">Oficiálny program je za tebou.<br>Pred tebou je posledná noc v plnej zostave.<br><br>Uži si ju, Mišo.</p>
+      <div class="night-status"><p>STAV PARTIE: AKTÍVNY ✓</p><p>STAV ŽENÍCHA: AKTÍVNY ✓</p><p>NOČNÝ REŽIM: SPUSTENÝ ✓</p></div>
+      <p class="warsaw-line">ČO SA STANE VO VARŠAVE,<br>ZOSTANE VO VARŠAVE.</p>
     </section>
 
     <form class="access" id="access-form" novalidate>
@@ -523,7 +614,7 @@
       const activities = [
         {
           card: 'activity-one', challenge: 'challenge', destination: 'destination', challengeCode: 'EXPERIMENT',
-          riddle: ['Do istého bodu som bol cestovateľom.', 'Potom jeden veľmi šumný pán zistil,\nže v skutočnosti sú cestovatelia všetci okolo mňa.', 'Kto som?'],
+          riddle: ['Do istého bodu som bol cestovateľom.', 'Potom jeden Poliak zistil,\nže v skutočnosti sú cestovatelia všetci okolo mňa.', 'Čo som?'],
           answers: ['slnko'], wrongAnswer: 'Experiment nevyšiel. Skús ďalšiu hypotézu.'
         },
         {
@@ -557,8 +648,32 @@
       let stages = activities.map(() => STAGE.LOCKED);
       // A presentation substep within CHALLENGE; the three existing stage values stay compatible.
       let riddleOpened = activities.map(() => false);
+      let timers = activities.map(() => ({ challengeStartedAt: null, riddleStartedAt: null, hintsOpened: [false, false, false] }));
       let activeActivity = 0;
       let animating = false;
+      let completionCelebrationSeen = false;
+      const endingConfirmation = document.createElement('dialog');
+      endingConfirmation.className = 'ending-confirm';
+      endingConfirmation.id = 'ending-confirm';
+      endingConfirmation.setAttribute('aria-labelledby', 'ending-confirm-heading');
+      endingConfirmation.setAttribute('aria-describedby', 'ending-confirm-description');
+      endingConfirmation.innerHTML = `<p class="eyebrow">VŠETKY 4 AKTIVITY BOLI ODOMKNUTÉ ✓</p>
+        <p id="ending-confirm-description">CHYSTÁŠ SA UKONČIŤ OPERÁCIU ROZLÚČKA.</p>
+        <h2 id="ending-confirm-heading">NAOZAJ CHCEŠ AKTIVOVAŤ KONIEC VÍKENDU?</h2>
+        <div class="ending-confirm-actions"><button class="help-button" id="ending-cancel" type="button" autofocus>EŠTE NIE</button>
+        <button class="unlock-button" id="ending-confirm-start" type="button">AKTIVOVAŤ KONIEC</button></div>`;
+      document.body.append(endingConfirmation);
+      byId('activate-ending').addEventListener('click', () => {
+        if (animating || endingConfirmation.open || completionCelebrationSeen || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        endingConfirmation.showModal();
+      });
+      byId('ending-cancel').addEventListener('click', () => endingConfirmation.close());
+      byId('ending-confirm-start').addEventListener('click', () => {
+        if (!endingConfirmation.open || animating) return;
+        endingConfirmation.close();
+        runCompletionCelebration();
+      });
+      window.addEventListener('bachelor:reset', () => endingConfirmation.close());
 
       function storageUnavailable() {
         byId('storage-note').textContent = 'Úložisko nie je dostupné. Postup zostane zachovaný len počas otvorenia tejto stránky.';
@@ -566,9 +681,19 @@
 
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        completionCelebrationSeen = saved?.completionCelebrationSeen === true;
         if (saved && Array.isArray(saved.stages)) {
           stages = activities.map((_, index) => Object.values(STAGE).includes(saved.stages[index]) ? saved.stages[index] : STAGE.LOCKED);
           riddleOpened = stages.map((stage, index) => stage !== STAGE.LOCKED && saved.riddleOpened?.[index] === true);
+          timers = timers.map((empty, index) => {
+            const stored = saved.timers?.[index];
+            const validTime = value => Number.isFinite(value) && value > 0 ? value : null;
+            return stages[index] === STAGE.LOCKED ? empty : {
+              challengeStartedAt: validTime(stored?.challengeStartedAt),
+              riddleStartedAt: riddleOpened[index] ? validTime(stored?.riddleStartedAt) : null,
+              hintsOpened: empty.hintsOpened.map((_, hint) => riddleOpened[index] && stored?.hintsOpened?.[hint] === true)
+            };
+          });
           if (Number.isInteger(saved.activeActivity) && saved.activeActivity >= 0 && saved.activeActivity < activities.length) {
             activeActivity = saved.activeActivity;
           }
@@ -585,14 +710,104 @@
 
       function save() {
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened }));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened, timers, completionCelebrationSeen }));
           byId('storage-note').textContent = 'Postup je uložený v tomto zariadení.';
         } catch {
           storageUnavailable();
         }
       }
 
+      const hints = [
+        ['Som tu oveľa dlhšie ako ten Poliak.', 'Vitamín D.', 'Každé ráno ma hľadáš na oblohe.'],
+        ['Pomáham ľuďom nájsť správnu cestu.', 'Nepotrebujem mapu, aby som vedel, kam ukázať.', 'Sever je moja slabosť.'],
+        ['Farbu mením podľa toho, v akom stave sa nachádzam.', 'Moja červená fáza poriadne hreje.', 'Po použití zo mňa zostane popol.'],
+        ['To, že bežím, neznamená, že mám nohy.', 'Aby som fungoval, potrebujem gravitáciu.', 'Moje hrdlo udáva rýchlosť, akou plynie čas.']
+      ];
+
+      function createTimer(label) {
+        const element = document.createElement('div');
+        element.className = 'mission-timer';
+        element.innerHTML = `<span class="timer-label">${label}</span><strong class="timer-value" role="timer" aria-label="Zostávajúci čas">00:00</strong><div class="timer-track" aria-hidden="true"><span class="timer-fill"></span></div><span class="timer-status" role="status"></span>`;
+        return element;
+      }
+      const challengeTimers = activities.map(mission => {
+        const element = createTimer('ČAS NA SPLNENIE');
+        byId(`${mission.challenge}-heading`).after(element);
+        return element;
+      });
+      const riddleTimer = createTimer('ČAS NA HÁDANKU');
+      const riddleHeader = document.createElement('div');
+      riddleHeader.className = 'riddle-header';
+      byId('riddle-heading').before(riddleHeader);
+      riddleHeader.append(byId('riddle-heading'), riddleTimer);
+      const hintPanel = document.createElement('section');
+      hintPanel.className = 'riddle-hints';
+      hintPanel.setAttribute('aria-label', 'Nápovedy');
+      hintPanel.innerHTML = '<h3>NÁPOVEDY</h3>';
+      riddleForm.after(hintPanel);
+      const hintRows = hints[0].map((_, index) => {
+        const row = document.createElement('div');
+        row.className = 'hint-row';
+        row.innerHTML = `<button type="button" class="hint-toggle" aria-expanded="false" aria-controls="hint-copy-${index}"><span><span class="hint-chevron" aria-hidden="true">▸</span> NÁPOVEDA ${index + 1}</span></button><p class="hint-copy" id="hint-copy-${index}" hidden></p>`;
+        hintPanel.append(row);
+        row.querySelector('button').addEventListener('click', () => {
+          const state = timers[activeActivity];
+          if (animating || riddle.hidden || page.hidden) return;
+          state.hintsOpened[index] = !state.hintsOpened[index];
+          save();
+          updateTimers();
+        });
+        return row;
+      });
+      const elapsedSince = startedAt => Math.max(0, Date.now() - startedAt);
+      function formatTime(milliseconds) {
+        const seconds = Math.ceil(Math.max(0, milliseconds) / 1000);
+        return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+      }
+      // Older saves acquire a timestamp only when their current screen is first available.
+      function ensureVisibleTimer() {
+        if (page.hidden || animating || stages[activeActivity] !== STAGE.CHALLENGE) return;
+        const key = riddleOpened[activeActivity] ? 'riddleStartedAt' : 'challengeStartedAt';
+        if (timers[activeActivity][key] === null) {
+          timers[activeActivity][key] = Date.now();
+          save();
+        }
+      }
+      function paintTimer(element, startedAt, duration, challenge) {
+        const remaining = Math.max(0, duration - elapsedSince(startedAt));
+        element.querySelector('.timer-value').textContent = formatTime(remaining);
+        element.querySelector('.timer-fill').style.transform = `scaleX(${remaining / duration})`;
+        element.classList.toggle('expired', remaining === 0);
+        const message = remaining === 0 ? `ČAS VYPRŠAL ⚠${challenge ? '\nMISIA POKRAČUJE NA VLASTNÉ RIZIKO.' : ''}` : '';
+        const status = element.querySelector('.timer-status');
+        if (status.textContent !== message) status.textContent = message;
+      }
+      function updateTimers() {
+        if (page.hidden || animating || stages[activeActivity] !== STAGE.CHALLENGE) return;
+        ensureVisibleTimer();
+        const state = timers[activeActivity];
+        if (!riddleOpened[activeActivity]) {
+          paintTimer(challengeTimers[activeActivity], state.challengeStartedAt, 3600000, true);
+          return;
+        }
+        paintTimer(riddleTimer, state.riddleStartedAt, 600000, false);
+        hintRows.forEach((row, index) => {
+          const opened = state.hintsOpened[index];
+          const button = row.querySelector('button');
+          button.setAttribute('aria-expanded', String(opened));
+          row.querySelector('.hint-chevron').textContent = opened ? '▾' : '▸';
+          const copy = row.querySelector('.hint-copy');
+          copy.textContent = hints[activeActivity][index];
+          copy.hidden = !opened;
+        });
+      }
+      window.setInterval(updateTimers, 250);
+      document.addEventListener('visibilitychange', updateTimers);
+      window.addEventListener('pageshow', updateTimers);
+      window.addEventListener('bachelor:dashboard', updateTimers);
+
       function render() {
+        ensureVisibleTimer();
         const unlockedCount = stages.filter(stage => stage === STAGE.UNLOCKED).length;
         activities.forEach((mission, index) => {
           const stage = stages[index];
@@ -629,8 +844,11 @@
             return paragraph;
           }));
         }
+        updateTimers();
         byId('progress').textContent = `${String(unlockedCount).padStart(2, '0')} / 04 ODOMKNUTÉ`;
-        byId('completion').hidden = unlockedCount !== activities.length;
+        byId('ending-launch').hidden = unlockedCount !== activities.length || completionCelebrationSeen;
+        byId('completion').hidden = unlockedCount !== activities.length || !completionCelebrationSeen;
+        if (!byId('completion').hidden) page.querySelector('header').after(byId('completion'));
         byId('code-hint').textContent = unlockedCount === activities.length ? 'Všetky aktivity sú odomknuté. Uži si zvyšok Varšavy.' : stage === STAGE.UNLOCKED ? `Aktivita #${activeActivity + 1} je odomknutá. Ďalšie pokyny dostaneš od partie.` : stage === STAGE.CHALLENGE ? (riddleOpened[activeActivity] ? 'Odpoveď na hádanku zadaj vyššie. Sem patrí prístupový kód k ďalšej výzve.' : 'Splň výzvu a stlač „SPLNIL SOM ÚLOHU“. Potom ťa čaká hádanka.') : 'Drž sa partie. Čoskoro dostaneš svoj kód.';
       }
 
@@ -701,6 +919,7 @@
         const { steps } = sequence;
         const heading = byId('checkpoint-heading');
         animating = true;
+        if (type === 'unlock') riddle.hidden = true;
         document.activeElement?.blur();
         page.inert = true;
         input.disabled = true;
@@ -755,6 +974,214 @@
         input.disabled = false;
         byId('unlock-button').disabled = false;
         animating = false;
+      }
+
+      function runCompletionCelebration() {
+        if (animating || completionCelebrationSeen || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        // Unlocking, confirmation and an interrupted cinematic leave the ending available.
+        // Only reaching the completed dashboard commits the celebration as seen.
+        animating = true;
+        page.inert = true;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const finale = document.createElement('section');
+        finale.className = 'finale finale-enter';
+        finale.setAttribute('role', 'dialog');
+        finale.setAttribute('aria-modal', 'true');
+        finale.setAttribute('aria-label', 'Misia splnená');
+        finale.innerHTML = `<div class="finale-particles" aria-hidden="true"></div><div class="finale-panel">
+          <p class="eyebrow" id="finale-label">ZÁVEREČNÝ PROTOKOL / VARŠAVA</p>
+          <h2 class="finale-heading" tabindex="-1" id="finale-heading" aria-live="polite" aria-atomic="true"></h2>
+          <div class="finale-scan" hidden aria-hidden="true"></div>
+          <div id="finale-success" hidden><p class="eyebrow" id="finale-percent">REŽIM ŽENÍCH: 0 %</p>
+            <div class="completion-meter" id="finale-meter" role="progressbar" aria-label="Režim ženích" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span style="transform:scaleX(0)"></span></div>
+            <p class="eyebrow">4 / 4 AKTIVITY ODOMKNUTÉ ✓</p></div>
+          <div class="finale-reading" id="finale-reading" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+          <div class="finale-letter" id="finale-letter" hidden></div>
+          <div class="night-status" id="finale-night" role="status" aria-live="polite" hidden></div>
+          <button class="help-button finale-continue" id="finale-continue" type="button" hidden>POKRAČOVAŤ →</button>
+        </div>`;
+        document.body.append(finale);
+        const heading = byId('finale-heading');
+        const reading = byId('finale-reading');
+        const particles = finale.querySelector('.finale-particles');
+        const scan = finale.querySelector('.finale-scan');
+        const continueButton = byId('finale-continue');
+        const tasks = new Set();
+        let frame;
+        let disposed = false;
+        function later(callback, delay) {
+          const id = window.setTimeout(() => {
+            tasks.delete(id);
+            if (!disposed) callback();
+          }, delay);
+          tasks.add(id);
+        }
+        function enter(element, text) {
+          element.classList.remove('finale-enter');
+          element.textContent = text;
+          void element.offsetWidth;
+          element.classList.add('finale-enter');
+        }
+        function cleanup() {
+          disposed = true;
+          tasks.forEach(id => window.clearTimeout(id));
+          window.cancelAnimationFrame(frame);
+          particles.replaceChildren();
+          finale.remove();
+          document.body.style.overflow = previousOverflow;
+          finishSystemSequence();
+          window.removeEventListener('bachelor:reset', cleanup);
+        }
+        window.addEventListener('bachelor:reset', cleanup);
+        // The only focusable control appears after the entire personal message is available.
+        finale.addEventListener('keydown', event => {
+          if (event.key === 'Tab') {
+            event.preventDefault();
+            (continueButton.hidden ? heading : continueButton).focus({ preventScroll: true });
+          }
+        });
+        function finish() {
+          finale.classList.add('leaving');
+          later(() => {
+            completionCelebrationSeen = true;
+            save();
+            cleanup();
+            render();
+            byId('completion-heading').focus({ preventScroll: true });
+            byId('completion').scrollIntoView({ behavior: 'instant', block: 'start' });
+          }, 600);
+        }
+        function nightMode() {
+          if (continueButton.hidden || disposed) return;
+          continueButton.hidden = true;
+          byId('finale-letter').hidden = true;
+          finale.classList.remove('calm');
+          finale.scrollTo({ top: 0, behavior: 'instant' });
+          byId('finale-label').textContent = 'NOČNÝ PROTOKOL / VARŠAVA';
+          enter(heading, 'EMOCIONÁLNY REŽIM UKONČENÝ...');
+          heading.focus({ preventScroll: true });
+          later(() => {
+            enter(heading, 'AKTIVUJEM NOČNÝ REŽIM...');
+            scan.hidden = false;
+            later(() => {
+              scan.hidden = true;
+              const night = byId('finale-night');
+              night.hidden = false;
+              enter(heading, 'NOČNÝ REŽIM');
+              const lines = ['STAV PARTIE: AKTÍVNY', 'STAV ŽENÍCHA: AKTÍVNY', 'NOČNÝ REŽIM: SPUSTENÝ'];
+              function status(index) {
+                const p = document.createElement('p');
+                p.className = 'finale-enter';
+                p.textContent = `${lines[index]} ✓`;
+                night.append(p);
+                later(() => {
+                  if (index < lines.length - 1) status(index + 1);
+                  else {
+                    night.hidden = true;
+                    enter(heading, 'ČO SA STANE VO VARŠAVE,\nZOSTANE VO VARŠAVE.');
+                    heading.style.whiteSpace = 'pre-line';
+                    later(finish, 6000);
+                  }
+                }, 2800);
+              }
+              status(0);
+            }, 3300);
+          }, 3300);
+        }
+        continueButton.addEventListener('click', nightMode);
+        const paragraphs = [
+          ['Mišo,\n\núlohy sú splnené, aktivity odomknuté\na plán tejto rozlúčky je oficiálne za nami.', 8500],
+          ['Ale to najdôležitejšie nebolo v žiadnom pláne.', 6000],
+          ['Dnes sú tu s tebou ľudia\nz rôznych období a rôznych častí tvojho života.', 8000],
+          ['Možno sa všetci nepoznáme roky.\nMožno sa niektorí poriadne spoznali až tento víkend.', 8500],
+          ['Ale všetci sme sem prišli kvôli jednému človeku.', 6500],
+          ['KVÔLI TEBE.', 5500],
+          ['Dnes je posledná noc,\nktorú spolu zažijeme ešte predtým,\nnež sa zo ženícha stane manžel.', 9000],
+          ['Tak si ju zapamätaj.', 5000],
+          ['Na všetky hovadiny, ktoré máš za sebou.\nNa ľudí, ktorí pri tom boli.\nA na všetko dobré, čo ťa ešte len čaká.', 10000],
+          ['Uži si poslednú noc ako ženích, Mišo.', 6000],
+          ['Sme radi, že ju môžeme zažiť s tebou.', 6500]
+        ];
+        function personalMessage() {
+          particles.replaceChildren();
+          finale.classList.remove('success');
+          finale.classList.add('calm');
+          byId('finale-success').hidden = true;
+          byId('finale-label').textContent = 'OD PARTIE PRE TEBA';
+          heading.textContent = '';
+          reading.hidden = false;
+          function paragraph(index) {
+            finale.classList.toggle('personal-beat', index === 5);
+            reading.style.color = index === 4 ? 'var(--accent)' : '';
+            enter(reading, paragraphs[index][0]);
+            later(() => {
+              if (index < paragraphs.length - 1) {
+                // A quiet pause separates the dedication from its standalone emotional peak.
+                if (index === 4) {
+                  reading.textContent = '';
+                  later(() => paragraph(index + 1), 1000);
+                } else paragraph(index + 1);
+              } else {
+                reading.hidden = true;
+                const letter = byId('finale-letter');
+                paragraphs.forEach(([text], index) => {
+                  const p = document.createElement('p');
+                  p.textContent = text;
+                  if (index === 5) p.className = 'personal-line';
+                  letter.append(p);
+                });
+                letter.hidden = false;
+                continueButton.hidden = false;
+                // Leave the complete letter available for as long as he wants to read it.
+                finale.scrollTo({ top: 0, behavior: 'instant' });
+              }
+            }, paragraphs[index][1]);
+          }
+          later(() => paragraph(0), 1600);
+        }
+        function celebrate() {
+          if (!reducedMotion.matches) {
+            const symbols = ['▪', '✓', '▪', '—', '✦', '100%'];
+            for (let index = 0; index < 56; index++) {
+              const particle = document.createElement('span');
+              particle.className = 'finale-particle';
+              particle.textContent = symbols[index % symbols.length];
+              particle.style.setProperty('--x', `${(Math.random() - .5) * 140}vw`);
+              particle.style.setProperty('--y', `${(Math.random() - .25) * 120}svh`);
+              particle.style.setProperty('--rotation', `${(Math.random() - .5) * 420}deg`);
+              particle.style.setProperty('--duration', `${2600 + Math.random() * 1300}ms`);
+              particle.style.setProperty('--delay', `${Math.random() * 700}ms`);
+              particle.addEventListener('animationend', () => particle.remove(), { once: true });
+              particles.append(particle);
+            }
+          }
+          // The same pause remains in reduced motion; cleanup also handles backgrounded tabs.
+          later(personalMessage, 5000);
+        }
+        function success() {
+          finale.classList.add('success');
+          enter(heading, 'MISIA SPLNENÁ');
+          byId('finale-success').hidden = false;
+          const started = performance.now();
+          function progress(now) {
+            const percent = Math.min(100, Math.floor((now - started) / 24));
+            byId('finale-percent').textContent = `REŽIM ŽENÍCH: ${percent} %`;
+            byId('finale-meter').setAttribute('aria-valuenow', String(percent));
+            byId('finale-meter').firstElementChild.style.transform = `scaleX(${reducedMotion.matches && percent < 100 ? 0 : percent / 100})`;
+            if (percent < 100) frame = window.requestAnimationFrame(progress);
+            else celebrate();
+          }
+          frame = window.requestAnimationFrame(progress);
+        }
+        const checks = ['OVERUJEM STAV OPERÁCIE...', '4 / 4 AKTIVITY ODOMKNUTÉ ✓', 'VŠETKY ÚLOHY SPLNENÉ ✓', 'ŽENÍCH STÁLE NAŽIVE ✓', 'DÔSTOJNOSŤ...', 'NENAŠLA SA ⚠'];
+        function verify(index) {
+          enter(heading, checks[index]);
+          scan.hidden = index !== 4;
+          later(() => index < checks.length - 1 ? verify(index + 1) : success(), index === 5 ? 4000 : 3300);
+        }
+        verify(0);
+        heading.focus({ preventScroll: true });
       }
 
       function unlockDestination(index) {
@@ -864,7 +1291,9 @@
       byId('reset-game').addEventListener('click', () => {
         if (animating || !window.confirm('Resetovať hru? Všetok uložený postup sa vymaže a aktivity sa znova zamknú.')) return;
         stages = activities.map(() => STAGE.LOCKED);
+        completionCelebrationSeen = false;
         riddleOpened = activities.map(() => false);
+        timers = activities.map(() => ({ challengeStartedAt: null, riddleStartedAt: null, hintsOpened: [false, false, false] }));
         activeActivity = 0;
         try {
           localStorage.removeItem(STORAGE_KEY);
@@ -889,6 +1318,7 @@
     (() => {
       'use strict';
       const ONBOARDING_KEY = 'misos-bachelor-onboarding-v1';
+      const COLD_OPEN_KEY = 'misos-bachelor-cold-open-v1';
       const welcome = document.getElementById('welcome');
       const dashboard = document.getElementById('page');
       const startButton = document.getElementById('start-weekend');
@@ -902,23 +1332,24 @@
       const status = document.getElementById('boot-status');
       const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
       const messages = [
-        'NAČÍTAVAM VARŠAVU...',
         'KONTROLUJEM ZÁSOBY PIVA...',
-        'ZAMYKÁM TAJNÉ AKTIVITY...',
         'PRIPRAVUJEM POCHYBNÉ ROZHODNUTIA...',
-        'KONTROLUJEM, ČI JE MIŠO PRIPRAVENÝ...',
+        'KONTAKTUJEM VŠETKY BOBRY V POĽSKU...',
+        'MAŽEM SIMINE ČÍSLO Z MIŠOVHO MOBILU...',
         'ODSTRAŇUJEM MIŠOVU KONTROLU NAD PROGRAMOM...',
+        'PRIPRAVUJEM VARŠAVSKÉ ŽENY NA PRÍCHOD ALFA SAMCA...',
+        'KONTAKTUJEM DÍLERA...',
         'AKTIVUJEM REŽIM ŽENÍCH...',
         'SYNCHRONIZUJEM PARTIU...',
-        'KONTROLUJEM ÚNIK TAJNÝCH INFORMÁCIÍ...',
-        'PRIPRAVUJEM VARŠAVU NA PRÍCHOD MIŠA...'
+        'PRIPRAVUJEM FINANCIE...',
+        'AKTIVUJEM REŽIM „MOŽNO SKONČÍM V BASE“...'
       ];
-      // Each message: 300ms in, 2450ms fully visible, 300ms out.
-      // 30.5s of messages + 2s final check + 2s success + fades: about 35s.
-      const messageDuration = 3050;
+      // Each message: 300ms in, 2700ms fully visible, 300ms out.
+      // Eleven messages, a 2.8s final check, then 2s at 100%.
+      const messageDuration = 3300;
       const finalCheckStarts = messages.length * messageDuration;
-      const loadingDuration = finalCheckStarts + 2000;
-      const progressStops = [0, 8, 17, 27, 38, 48, 61, 71, 81, 91, 98];
+      const loadingDuration = finalCheckStarts + 2800;
+      const progressStops = Array.from({ length: messages.length + 1 }, (_, index) => Math.round(index * 98 / messages.length));
       status.style.setProperty('--message-duration', `${messageDuration}ms`);
       let completed = false;
       let starting = false;
@@ -928,6 +1359,88 @@
       let timer;
 
       try { completed = localStorage.getItem(ONBOARDING_KEY) === 'complete'; } catch { /* Session-only onboarding when storage is unavailable. */ }
+
+      const cold = document.createElement('section');
+      cold.className = 'cold-open';
+      cold.hidden = true;
+      cold.setAttribute('aria-label', 'Let do Varšavy');
+      cold.innerHTML = `<div class="flight-panel"><p class="eyebrow">RIADENIE MISIE / LETOVÁ TRASA</p>
+        <svg class="flight-map" viewBox="0 0 440 280" role="img" aria-label="Letová trasa z Bratislavy do Varšavy">
+          <g class="flight-locations">
+            <path id="flight-route" d="M 65 205 Q 90 65 350 80" pathLength="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="65" cy="205" r="5" fill="currentColor"/><circle cx="350" cy="80" r="5" fill="currentColor"/>
+            <circle id="warsaw-pulse" cx="350" cy="80" r="11" fill="none" stroke="currentColor" opacity=".5"/>
+            <text x="22" y="243">BRATISLAVA 🇸🇰</text><text x="288" y="48">VARŠAVA 🇵🇱</text>
+          </g>
+          <g id="flight-plane" hidden><path d="M 13 0 L -9 -10 L -5 -2 L -12 -2 L -14 -5 L -16 -5 L -14 0 L -16 5 L -14 5 L -12 2 L -5 2 L -9 10 Z" fill="currentColor"/></g>
+        </svg><h2 id="cold-message" tabindex="-1" role="status" aria-live="polite" aria-atomic="true"></h2></div>`;
+      document.body.append(cold);
+      function runColdOpen() {
+        starting = true;
+        welcome.hidden = true;
+        dashboard.hidden = true;
+        boot.hidden = true;
+        cold.classList.remove('route-visible', 'flight-arrived', 'leaving');
+        cold.hidden = false;
+        const heading = document.getElementById('cold-message');
+        const plane = document.getElementById('flight-plane');
+        const route = document.getElementById('flight-route');
+        plane.setAttribute('hidden', '');
+        const flightDuration = 8000;
+        const steps = [
+          ['INICIALIZUJEM OPERÁCIU...', 3300], ['LOKALIZUJEM CIEĽ...', 3300],
+          ['BRATISLAVA → VARŠAVA', 3300], ['TRASA POTVRDENÁ ✓', 3300],
+          ['LET DO VARŠAVY...', flightDuration], ['PRISTÁTIE POTVRDENÉ ✓', 3300],
+          ['CIEĽ DOSIAHNUTÝ', 3300], ['VITAJ V POĽSKU, MIŠO.', 3300]
+        ];
+        function positionPlane(fraction) {
+          const length = route.getTotalLength();
+          const point = route.getPointAtLength(length * fraction);
+          const next = route.getPointAtLength(Math.min(length, length * fraction + 1));
+          const previous = route.getPointAtLength(Math.max(0, length * fraction - 1));
+          const angle = Math.atan2(next.y - previous.y, next.x - previous.x) * 180 / Math.PI;
+          plane.setAttribute('transform', `translate(${point.x} ${point.y}) rotate(${angle})`);
+        }
+        function step(index) {
+          heading.classList.remove('cold-message-enter');
+          heading.textContent = steps[index][0];
+          heading.style.setProperty('--cold-step-duration', `${steps[index][1]}ms`);
+          void heading.offsetWidth;
+          heading.classList.add('cold-message-enter');
+          if (index === 0) heading.focus({ preventScroll: true });
+          if (index === 2) cold.classList.add('route-visible');
+          if (index === 4) {
+            plane.removeAttribute('hidden');
+            positionPlane(0);
+            const began = performance.now();
+            function fly(now) {
+              const fraction = Math.min(1, (now - began) / flightDuration);
+              // Reduced motion uses static departure/arrival markers with the same reading time.
+              if (!motion.matches) positionPlane(fraction);
+              if (fraction < 1) frame = requestAnimationFrame(fly);
+            }
+            frame = requestAnimationFrame(fly);
+          }
+          if (index === 5) {
+            cancelAnimationFrame(frame);
+            positionPlane(1);
+            cold.classList.add('flight-arrived');
+          }
+          timer = setTimeout(() => {
+            if (index + 1 < steps.length) step(index + 1);
+            else {
+              try { localStorage.setItem(COLD_OPEN_KEY, 'complete'); } catch { /* Session-only completion. */ }
+              cold.classList.add('leaving');
+              timer = setTimeout(() => {
+                cold.hidden = true;
+                starting = false;
+                showWelcome();
+              }, motion.matches ? 0 : 400);
+            }
+          }, steps[index][1]);
+        }
+        step(0);
+      }
 
       function showWelcome(review = false, focus = true) {
         reviewing = review;
@@ -950,6 +1463,7 @@
         welcome.hidden = true;
         boot.hidden = true;
         dashboard.hidden = false;
+        window.dispatchEvent(new Event('bachelor:dashboard'));
         if (animate) {
           dashboard.classList.remove('dashboard-enter');
           void dashboard.offsetWidth;
@@ -986,14 +1500,14 @@
         const index = Math.floor(elapsed / messageDuration);
         const withinMessage = elapsed - index * messageDuration;
         // Wait through the entrance, ease forward, then hold during the exit.
-        const fraction = Math.min(1, Math.max(0, (withinMessage - 300) / 2200));
+        const fraction = Math.min(1, Math.max(0, (withinMessage - 300) / (messageDuration - 600)));
         const eased = fraction * fraction * (3 - 2 * fraction);
         return Math.floor(progressStops[index] + eased * (progressStops[index + 1] - progressStops[index]));
       }
 
       function finishInitialization() {
         setProgress(100);
-        bootHeading.textContent = 'SYSTÉM PRIPRAVENÝ';
+        bootHeading.textContent = 'SYSTÉM PRIPRAVENÝ ✓';
         bootSuccess.hidden = false;
         boot.classList.add('ready');
         status.textContent = '';
@@ -1051,12 +1565,21 @@
         window.clearTimeout(timer);
         completed = false;
         starting = false;
-        try { localStorage.removeItem(ONBOARDING_KEY); } catch { /* Reset in memory even if storage is unavailable. */ }
-        showWelcome();
+        try {
+          localStorage.removeItem(ONBOARDING_KEY);
+          localStorage.removeItem(COLD_OPEN_KEY);
+        } catch { /* Reset in memory even if storage is unavailable. */ }
+        runColdOpen();
       });
 
+      let coldCompleted = completed;
+      try {
+        // Existing players retain their current experience; only fresh games get the new intro.
+        coldCompleted ||= localStorage.getItem(COLD_OPEN_KEY) === 'complete' || localStorage.getItem('misos-bachelor-weekend-v1') !== null;
+      } catch { /* Keep the intro usable without persistent storage. */ }
       if (completed) showDashboard();
-      else showWelcome(false, false);
+      else if (coldCompleted) showWelcome(false, false);
+      else runColdOpen();
     })();
   </script>
 </body>
