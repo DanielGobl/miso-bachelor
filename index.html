@@ -258,7 +258,71 @@
       .unlock-button { padding: 0 11px; }
       .location .year { letter-spacing: 0; }
     }
+    .finale-activate { width: 100%; margin-top: 22px; white-space: normal; }
+    .finale-preview-note { margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px dashed #78924d; color: var(--accent); font: 11px/1.8 var(--mono); }
+    .finale-preview-note a { color: var(--accent); }
+    .finale-preview-skip { position: absolute; top: max(76px, calc(env(safe-area-inset-top) + 56px)); left: 26px; padding: 10px 0; color: var(--accent); }
+    .finale-preview-skip:disabled { opacity: .4; }
+    .completion .completed-copy { color: #c6cebd; font-size: 15px; line-height: 1.8; }
+    .party-status { display: grid; gap: 10px; margin: 24px 0; color: var(--accent); font: bold 11px/1.6 var(--mono); letter-spacing: 1px; }
+    .completion .warsaw-statement { margin: 25px 0 0; color: var(--accent); font: 900 clamp(24px, 7vw, 34px)/1.12 Arial, sans-serif; letter-spacing: -1px; }
+    .finale-confirm { width: min(440px, calc(100% - 36px)); padding: 30px; border: 1px solid var(--accent); color: var(--text); background: #151d11; }
+    .finale-confirm::backdrop { background: #050904df; }
+    .finale-confirm h2 { color: var(--accent); font: bold 22px/1.4 var(--mono); }
+    .finale-confirm p { color: #c6cebd; line-height: 1.7; }
+    .finale-confirm .unlock-button { width: 100%; white-space: normal; }
+    .finale-confirm .help-button { display: block; margin: 12px auto 0; }
+    body.finale-open { overflow: hidden; }
+    .finale-screen { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; overflow: auto; padding: 84px 26px 76px; isolation: isolate; background: #090e08; }
+    .finale-screen::before, .finale-screen::after { content: ''; position: absolute; inset: 16px; z-index: -1; pointer-events: none; }
+    .finale-screen::before { border: 1px solid #d5ee9725; background: radial-gradient(ellipse at center, #30402045, transparent 72%); }
+    .finale-content { width: min(100%, 900px); text-align: center; }
+    .finale-label { margin: 0 0 36px; color: #91a47c; font: 10px/1.6 var(--mono); letter-spacing: 3px; }
+    .finale-message { margin: 0; color: var(--accent); white-space: pre-line; overflow-wrap: break-word; font: bold clamp(23px, 5vw, 48px)/1.4 var(--mono); }
+    .finale-message.cue-enter { animation: finale-cue .65s ease-out both; animation-delay: var(--cue-delay, 0s); }
+    .finale-screen[data-mode="emotion"] { background: #10140f; }
+    .finale-screen[data-mode="emotion"]::before { inset: 28px; border-color: #d5ee970d; background: radial-gradient(ellipse at 50% 70%, #d5ee9709, transparent 65%); }
+    .finale-screen[data-mode="emotion"] .finale-label { color: #a0a695; letter-spacing: 4px; }
+    .finale-screen[data-mode="emotion"] .finale-message { max-width: 790px; margin: auto; color: #f0f1e9; font: 400 clamp(22px, 4.3vw, 40px)/1.65 Arial, sans-serif; letter-spacing: -.5px; }
+    .finale-screen[data-mode="emotion"] .finale-message.emphasis { color: var(--accent); font-size: clamp(42px, 10vw, 92px); font-weight: 900; line-height: 1.1; text-shadow: 0 0 40px #d5ee9730; }
+    .finale-screen[data-mode="party"] { background: #071005; }
+    .finale-screen[data-mode="party"]::before { border: 3px solid #c4f775; background: repeating-linear-gradient(120deg, transparent 0 100px, #c4f77508 101px 103px), radial-gradient(ellipse at center, #47762655, transparent 75%); box-shadow: inset 0 0 80px #b5ff5430, 0 0 30px #c4f77535; animation: party-strobe var(--party-beat) steps(1, end) infinite; }
+    .finale-screen[data-mode="party"]::after { inset: 0; background: #b5ee72; opacity: 0; animation: party-light var(--party-beat) steps(1, end) infinite; }
+    .finale-screen[data-mode="party"] .finale-label { color: #d5ee97; }
+    .finale-screen[data-mode="party"] .finale-message.statement { font: 900 clamp(46px, 14vw, 112px)/1.02 Impact, 'Arial Narrow', Arial, sans-serif; letter-spacing: -1px; text-shadow: 0 0 50px #b5ff5430; }
+    .finale-screen.drop-impact .finale-content { animation: drop-shake .45s ease-out both; }
+    .finale-screen.party-settled { --strobe-strength: .10; }
+    .party-visuals { display: none; position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; mask-image: radial-gradient(ellipse at center, #0004, #000 72%); }
+    .finale-screen[data-mode="party"] .party-visuals { display: block; }
+    .party-laser { position: absolute; bottom: -20%; left: 50%; width: 2px; height: 145%; transform-origin: 50% 100%; background: linear-gradient(transparent, #c4f775cc 40%, #d5ee97); box-shadow: 0 0 12px #b5ff54aa, 0 0 32px #b5ff5430; }
+    .finale-screen[data-mode="party"] .party-laser { animation: party-laser-sweep var(--party-phrase) ease-in-out infinite alternate; }
+    .finale-screen[data-mode="party"] .party-laser:nth-child(even) { animation-direction: alternate-reverse; }
+    .party-tunnel { position: absolute; left: 50%; top: 50%; width: min(72vw, 680px); height: 65vh; border: 2px solid #b5ee7270; box-shadow: 0 0 24px #b5ff5415; }
+    .finale-screen[data-mode="party"] .party-tunnel { animation: party-tunnel-flight var(--party-phrase) linear infinite; animation-delay: calc(var(--offset) * var(--party-beat) * -2); }
+    .party-meters { position: absolute; left: 7%; right: 7%; bottom: 10%; height: 20%; display: flex; align-items: end; justify-content: space-between; gap: 6px; }
+    .party-meter { flex: 1; height: var(--height); max-width: 26px; background: repeating-linear-gradient(to top, #a5e85c80 0 5px, transparent 5px 9px); transform-origin: bottom; }
+    .finale-screen[data-mode="party"] .party-meter { animation: party-meter var(--party-beat) ease-out infinite; }
+    .party-meter:nth-child(3n) { --low: .25; }
+    .party-meter:nth-child(3n + 1) { --low: .45; }
+    .party-meter:nth-child(3n + 2) { --low: .65; }
+    .party-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+    .party-spark { position: absolute; top: 50%; left: 50%; width: 3px; height: 16px; background: #d5ee97; box-shadow: 0 0 12px #c4f77570; animation: party-spark 2.4s ease-out both; }
+    .finale-controls { position: fixed; top: max(24px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right)); z-index: 40; display: flex; gap: 8px; }
+    .finale-controls button { min-width: 44px; min-height: 44px; padding: 8px 12px; color: var(--accent); border: 1px solid #d5ee9740; border-radius: 3px; background: #10180fe8; font: 12px var(--mono); }
+    .finale-actions { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); left: 26px; right: 26px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .finale-exit { padding: 10px 0; color: var(--accent); text-align: left; }
+    .finale-reset { margin-left: auto; padding-left: 0; font-size: 9px; }
+    @keyframes finale-cue { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes party-strobe { 0%, 100% { opacity: 1; } 18% { opacity: .3; } }
+    @keyframes party-light { 0%, 100% { opacity: var(--strobe-strength, .16); } 18% { opacity: 0; } }
+    @keyframes party-laser-sweep { from { transform: rotate(var(--from)); opacity: .45; } to { transform: rotate(var(--to)); opacity: .8; } }
+    @keyframes party-tunnel-flight { 0% { transform: translate(-50%, -50%) scale(.08) rotate(-12deg); opacity: 0; } 20% { opacity: .6; } 100% { transform: translate(-50%, -50%) scale(2.4) rotate(12deg); opacity: 0; } }
+    @keyframes party-meter { 0%, 100% { transform: scaleY(1); } 75% { transform: scaleY(var(--low)); } }
+    @keyframes drop-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 60% { transform: translateX(3px); } }
+    @keyframes party-spark { from { opacity: .9; transform: translate(0, 0) rotate(var(--angle)); } to { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--angle)); } }
+    @media (max-height: 500px) { .finale-screen { padding: 70px 30px 50px; } .finale-label { margin-bottom: 16px; } .finale-message { font-size: 24px; } .finale-screen[data-mode="emotion"] .finale-message { font-size: 21px; } .finale-screen[data-mode="party"] .finale-message.statement { font-size: clamp(30px, 6vw, 48px); } .finale-screen .party-status { margin: 12px 0; gap: 3px; } }
     @media (prefers-reduced-motion: reduce) {
+      .finale-screen[data-mode="party"]::after, .party-particles, .finale-screen[data-mode="party"] .party-visuals { display: none; }
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
@@ -476,9 +540,17 @@
     </section>
 
     <section class="completion" id="completion" aria-labelledby="completion-heading" hidden>
-      <p class="eyebrow">4/4 AKTIVITY ODOMKNUTÉ</p>
-      <h2 id="completion-heading">REŽIM ŽENÍCH: 100%</h2>
-      <p>Teraz už len preži zvyšok Varšavy.</p>
+      <div class="finale-preview-note" id="finale-preview-note" hidden>TEST FINÁLE / 4 AKTIVITY ODOMKNUTÉ<br>Uložená hra sa nemení. Obnovením stránky začneš test znova.<br><a id="exit-finale-preview" href="index.html">UKONČIŤ TEST</a></div>
+      <p class="eyebrow">4 / 4 AKTIVITY ODOMKNUTÉ ✓</p>
+      <h2 id="completion-heading" tabindex="-1">MISIA SPLNENÁ</h2>
+      <p class="eyebrow">REŽIM ŽENÍCH: 100 %</p>
+      <button class="unlock-button finale-activate" id="activate-finale" type="button">AKTIVOVAŤ KONIEC VÍKENDU</button>
+      <div id="completed-dashboard" hidden>
+        <p class="completed-copy">Oficiálny program je za tebou.<br>Pred tebou je posledná noc v plnej zostave.</p>
+        <p class="completed-copy">Uži si ju, Mišo.</p>
+        <div class="party-status"><span>STAV PARTIE: AKTÍVNY</span><span>STAV ŽENÍCHA: AKTÍVNY</span><span>NOČNÝ REŽIM: SPUSTENÝ</span></div>
+        <p class="warsaw-statement">ČO SA STANE VO VARŠAVE,<br>ZOSTANE VO VARŠAVE.</p>
+      </div>
     </section>
 
     <form class="access" id="access-form" novalidate>
@@ -513,11 +585,39 @@
     <span class="eyebrow" id="grant-detail">Totožnosť overená / Aktivita #1 odomknutá</span>
   </div>
 
+  <dialog class="finale-confirm" id="finale-confirm" aria-labelledby="finale-confirm-heading">
+    <h2 id="finale-confirm-heading">AKTIVOVAŤ KONIEC VÍKENDU?</h2>
+    <p>Všetky aktivity sú odomknuté. Zavolaj partiu k sebe a zapni zvuk. Tento moment patrí vám.</p>
+    <button class="unlock-button" id="confirm-finale" type="button">AKTIVOVAŤ KONIEC</button>
+    <button class="help-button" id="cancel-finale" type="button" autofocus>EŠTE CHVÍĽU</button>
+  </dialog>
+  <section class="finale-screen" id="finale-screen" role="dialog" aria-modal="true" aria-label="Finále víkendu" hidden>
+    <button class="help-button finale-preview-skip" id="finale-preview-skip" type="button" hidden>TEST: PARTY ↗ 1:06,2</button>
+    <div class="party-visuals" id="party-visuals" aria-hidden="true"></div>
+    <div class="party-particles" id="party-particles" aria-hidden="true"></div>
+    <div class="finale-content">
+      <p class="finale-label" id="finale-label">POSLEDNÁ NOC / V PLNEJ ZOSTAVE</p>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        <h2 class="finale-message" id="finale-message" tabindex="-1"></h2>
+      </div>
+    </div>
+    <div class="finale-actions">
+      <button class="help-button finale-exit" id="finale-exit" type="button" hidden>SPÄŤ NA PREHĽAD</button>
+      <button class="reset finale-reset" id="finale-reset" type="button">RESETOVAŤ HRU</button>
+    </div>
+    <div class="finale-controls" id="finale-controls" hidden>
+      <button id="finale-resume" type="button" hidden>▶ POKRAČOVAŤ</button>
+      <button id="finale-mute" type="button" aria-label="Stlmiť hudbu" aria-pressed="false">🔊</button>
+    </div>
+  </section>
+  <audio id="finale-audio" src="assets/finale.mp3" preload="metadata" playsinline></audio>
+
   <script>
     (() => {
       'use strict';
 
       const STORAGE_KEY = 'misos-bachelor-weekend-v1';
+      const finalePreview = new URLSearchParams(window.location.search).get('preview') === 'finale';
       const STAGE = { LOCKED: 0, CHALLENGE: 1, UNLOCKED: 2 };
       const byId = (id) => document.getElementById(id);
       const activities = [
@@ -559,15 +659,19 @@
       let riddleOpened = activities.map(() => false);
       let activeActivity = 0;
       let animating = false;
+      let finaleActivated = false;
+      let finaleCompleted = false;
 
       function storageUnavailable() {
         byId('storage-note').textContent = 'Úložisko nie je dostupné. Postup zostane zachovaný len počas otvorenia tejto stránky.';
       }
 
       try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        const saved = finalePreview ? null : JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (saved && Array.isArray(saved.stages)) {
           stages = activities.map((_, index) => Object.values(STAGE).includes(saved.stages[index]) ? saved.stages[index] : STAGE.LOCKED);
+          finaleCompleted = stages.every(stage => stage === STAGE.UNLOCKED) && saved.finaleCompleted === true;
+          finaleActivated = stages.every(stage => stage === STAGE.UNLOCKED) && (saved.finaleActivated === true || finaleCompleted);
           riddleOpened = stages.map((stage, index) => stage !== STAGE.LOCKED && saved.riddleOpened?.[index] === true);
           if (Number.isInteger(saved.activeActivity) && saved.activeActivity >= 0 && saved.activeActivity < activities.length) {
             activeActivity = saved.activeActivity;
@@ -584,12 +688,27 @@
       }
 
       function save() {
+        if (finalePreview) return;
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened }));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened, finaleActivated, finaleCompleted }));
           byId('storage-note').textContent = 'Postup je uložený v tomto zariadení.';
         } catch {
           storageUnavailable();
         }
+      }
+
+      if (finalePreview) {
+        stages = activities.map(() => STAGE.UNLOCKED);
+        riddleOpened = activities.map(() => true);
+        activeActivity = activities.length - 1;
+        byId('finale-preview-note').hidden = false;
+        byId('storage-note').textContent = 'Test finále — skutočný postup zostáva nezmenený.';
+        byId('reset-game').textContent = 'ZOPAKOVAŤ TEST';
+        byId('finale-reset').textContent = 'ZOPAKOVAŤ TEST';
+        const gameURL = new URL(window.location.href);
+        gameURL.searchParams.delete('preview');
+        gameURL.hash = '';
+        byId('exit-finale-preview').href = gameURL.href;
       }
 
       function render() {
@@ -631,6 +750,8 @@
         }
         byId('progress').textContent = `${String(unlockedCount).padStart(2, '0')} / 04 ODOMKNUTÉ`;
         byId('completion').hidden = unlockedCount !== activities.length;
+        byId('activate-finale').hidden = finaleCompleted;
+        byId('completed-dashboard').hidden = !finaleCompleted;
         byId('code-hint').textContent = unlockedCount === activities.length ? 'Všetky aktivity sú odomknuté. Uži si zvyšok Varšavy.' : stage === STAGE.UNLOCKED ? `Aktivita #${activeActivity + 1} je odomknutá. Ďalšie pokyny dostaneš od partie.` : stage === STAGE.CHALLENGE ? (riddleOpened[activeActivity] ? 'Odpoveď na hádanku zadaj vyššie. Sem patrí prístupový kód k ďalšej výzve.' : 'Splň výzvu a stlač „SPLNIL SOM ÚLOHU“. Potom ťa čaká hádanka.') : 'Drž sa partie. Čoskoro dostaneš svoj kód.';
       }
 
@@ -861,8 +982,306 @@
         if (event.animationName === 'riddle-error') riddleForm.classList.remove('error');
       });
 
+      // Every cue is an absolute media timestamp. Missing frames never queue old cues.
+      const DROP_TIME = 66.6;
+      const PARTY_BPM = 130;
+      // In 4/4, two bars contain eight beats. Keep full precision for media-time cues.
+      const PARTY_TEXT_INTERVAL = (60 / PARTY_BPM) * 4 * 2;
+      const PARTY_STATEMENT_TIME = DROP_TIME + PARTY_TEXT_INTERVAL * 2;
+      const PARTY_READY_TIME = Math.max(PARTY_STATEMENT_TIME, DROP_TIME + 6);
+      const finaleAudio = byId('finale-audio');
+      const finaleScreen = byId('finale-screen');
+      const finaleMessage = byId('finale-message');
+      const finaleControls = byId('finale-controls');
+      finaleScreen.style.setProperty('--party-beat', `${60 / PARTY_BPM}s`);
+      finaleScreen.style.setProperty('--party-phrase', `${PARTY_TEXT_INTERVAL}s`);
+      // A fixed set of transform-only decorations; no continuous particle generation.
+      const partyVisuals = byId('party-visuals');
+      for (let index = 0; index < 6; index++) {
+        const laser = document.createElement('i');
+        laser.className = 'party-laser';
+        laser.style.setProperty('--from', `${-80 + index * 23}deg`);
+        laser.style.setProperty('--to', `${-45 + index * 23}deg`);
+        partyVisuals.append(laser);
+      }
+      for (let index = 0; index < 4; index++) {
+        const tunnel = document.createElement('i');
+        tunnel.className = 'party-tunnel';
+        tunnel.style.setProperty('--offset', index);
+        partyVisuals.append(tunnel);
+      }
+      const meters = document.createElement('div');
+      meters.className = 'party-meters';
+      for (let index = 0; index < 12; index++) {
+        const meter = document.createElement('i');
+        meter.className = 'party-meter';
+        meter.style.setProperty('--height', `${45 + (index * 37) % 56}%`);
+        meters.append(meter);
+      }
+      partyVisuals.append(meters);
+      byId('finale-preview-skip').textContent = `TEST: PARTY ↗ ${Math.floor(DROP_TIME / 60)}:${(DROP_TIME % 60).toFixed(1).padStart(4, '0').replace('.', ',')}`;
+      const finaleCues = [
+        [0, 'Mišo,'],
+        [4, 'úlohy sú splnené, aktivity odomknuté\na plán tejto rozlúčky je oficiálne za nami.'],
+        [10, 'Ale to najdôležitejšie nebolo v žiadnom pláne.'],
+        [15, 'Dnes sú tu s tebou ľudia\nz rôznych období a rôznych častí tvojho života.'],
+        [21, 'Možno sa všetci nepoznáme roky.\nMožno sa niektorí poriadne spoznali až tento víkend.'],
+        [28, 'Ale všetci sme sem prišli kvôli jednému človeku.'],
+        [33, 'KVÔLI TEBE.'],
+        [39, 'Dnes je posledná noc,\nktorú spolu zažijeme ešte predtým,\nnež sa zo ženícha stane manžel.'],
+        [46, 'Tak si ju zapamätaj.'],
+        [50, 'Na všetky hovadiny, ktoré máš za sebou.\nNa ľudí, ktorí pri tom boli.\nA na všetko dobré, čo ťa ešte len čaká.'],
+        [58, 'Uži si poslednú noc ako ženích, Mišo.'],
+        [62, 'Sme radi, že ju môžeme zažiť s tebou.'],
+        [DROP_TIME, 'EMOCIONÁLNY REŽIM UKONČENÝ...'],
+        [DROP_TIME + PARTY_TEXT_INTERVAL, 'AKTIVUJEM NOČNÝ REŽIM...'],
+        [PARTY_STATEMENT_TIME, 'ČO SA STANE VO VARŠAVE,\nZOSTANE VO VARŠAVE.']
+      ];
+      let finaleRunning = false;
+      let finaleFrame = 0;
+      let finaleRun = 0;
+      let currentCue = -1;
+      let dropSeen = false;
+      let fallbackClock = null;
+      let lastAudioTime = 0;
+
+      function finaleTime() {
+        if (fallbackClock) return fallbackClock.position + (performance.now() - fallbackClock.startedAt) / 1000;
+        lastAudioTime = finaleAudio.currentTime;
+        return lastAudioTime;
+      }
+
+      function useFallbackClock() {
+        if (!finaleRunning || fallbackClock) return;
+        fallbackClock = { position: Math.max(lastAudioTime, finaleAudio.currentTime || 0), startedAt: performance.now() };
+        // A failed/late play promise must not start unsynchronized audio later.
+        finaleAudio.pause();
+        finaleControls.hidden = true;
+        updateAudioControls();
+        syncFinale();
+      }
+
+      function createPartySparks() {
+        if (reducedMotion.matches) return;
+        const sparks = Array.from({ length: 26 }, (_, index) => {
+          const spark = document.createElement('i');
+          const angle = index * Math.PI * 2 / 26;
+          spark.className = 'party-spark';
+          spark.style.setProperty('--x', `${Math.cos(angle) * (35 + Math.random() * 35)}vw`);
+          spark.style.setProperty('--y', `${Math.sin(angle) * (35 + Math.random() * 35)}vh`);
+          spark.style.setProperty('--angle', `${angle}rad`);
+          spark.addEventListener('animationend', () => spark.remove(), { once: true });
+          return spark;
+        });
+        byId('party-particles').replaceChildren(...sparks);
+      }
+
+      function finishFinale() {
+        if (!finaleRunning || finaleScreen.dataset.mode !== 'party') return;
+        finaleRunning = false;
+        window.cancelAnimationFrame(finaleFrame);
+        finaleFrame = 0;
+        finaleCompleted = true;
+        save();
+        finaleScreen.hidden = true;
+        finaleScreen.classList.remove('drop-impact', 'party-settled');
+        byId('party-particles').replaceChildren();
+        // Keep the one audio instance playing, with mute still available on the dashboard.
+        page.append(finaleControls);
+        document.body.classList.remove('finale-open');
+        page.inert = false;
+        animating = false;
+        render();
+        reveal(byId('completion'), 'completion-heading');
+      }
+
+      function renderFinale(time) {
+        const party = time >= DROP_TIME;
+        finaleScreen.dataset.mode = party ? 'party' : 'emotion';
+        byId('finale-preview-skip').hidden = !finalePreview || party;
+        byId('finale-exit').hidden = !party;
+        // Remember that the celebration was seen, while keeping it open until dismissed.
+        if (time >= PARTY_STATEMENT_TIME && !finaleCompleted) {
+          finaleCompleted = true;
+          save();
+        }
+        finaleScreen.classList.toggle('drop-impact', party && time < DROP_TIME + .7 && !reducedMotion.matches);
+        finaleScreen.classList.toggle('party-settled', time >= DROP_TIME + 6);
+        if (party && !dropSeen) {
+          dropSeen = true;
+          if (time < DROP_TIME + .7) createPartySparks();
+        }
+        if ((time >= DROP_TIME + 3 || reducedMotion.matches) && byId('party-particles').childElementCount) byId('party-particles').replaceChildren();
+        let index = finaleCues.length - 1;
+        while (index > 0 && time < finaleCues[index][0]) index--;
+        if (index === currentCue) return;
+        currentCue = index;
+        const [timestamp, message] = finaleCues[index];
+        byId('finale-label').textContent = party ? 'VARŠAVA / NOČNÝ REŽIM' : 'POSLEDNÁ NOC / V PLNEJ ZOSTAVE';
+        byId('finale-label').hidden = time >= PARTY_STATEMENT_TIME;
+        finaleMessage.classList.remove('cue-enter');
+        finaleMessage.classList.toggle('emphasis', timestamp === 33);
+        finaleMessage.classList.toggle('statement', timestamp === PARTY_STATEMENT_TIME);
+        finaleMessage.textContent = message;
+        // On a seek or tab return, do not animate an already elapsed entrance.
+        finaleMessage.style.setProperty('--cue-delay', `${-Math.min(time - timestamp, .65)}s`);
+        void finaleMessage.offsetWidth;
+        finaleMessage.classList.add('cue-enter');
+      }
+
+      function syncPartyBeat(time) {
+        if (time < DROP_TIME || reducedMotion.matches) return;
+        // Flashes, lasers, tunnel and meters share beat zero at the audio drop.
+        // Media events correct their phase; CSS runs between events without a permanent RAF.
+        const followAudio = !fallbackClock && !finaleAudio.ended;
+        for (const animation of finaleScreen.getAnimations({ subtree: true })) {
+          if (!['party-strobe', 'party-light', 'party-laser-sweep', 'party-tunnel-flight', 'party-meter'].includes(animation.animationName)) continue;
+          animation.playbackRate = followAudio ? finaleAudio.playbackRate : 1;
+          if (followAudio && finaleAudio.paused) {
+            if (animation.playState !== 'paused') animation.pause();
+          } else if (animation.playState !== 'running') animation.play();
+          // Keep the party blinking freely once the song has ended.
+          if (!finaleAudio.ended || fallbackClock) animation.currentTime = (time - DROP_TIME) * 1000;
+        }
+      }
+
+      function syncFinale() {
+        window.cancelAnimationFrame(finaleFrame);
+        finaleFrame = 0;
+        if (!finaleRunning) return;
+        const time = finaleTime();
+        renderFinale(time);
+        syncPartyBeat(time);
+        // The persistent party pulse is CSS-only once the last cue and settling are done.
+        if (finaleRunning && !document.hidden && time < PARTY_READY_TIME) finaleFrame = window.requestAnimationFrame(syncFinale);
+      }
+
+      function updateAudioControls() {
+        byId('finale-preview-skip').disabled = !fallbackClock && finaleAudio.readyState === 0;
+        byId('finale-mute').textContent = finaleAudio.muted ? '🔇' : '🔊';
+        byId('finale-mute').setAttribute('aria-label', finaleAudio.muted ? 'Zapnúť zvuk' : 'Stlmiť hudbu');
+        byId('finale-mute').setAttribute('aria-pressed', String(finaleAudio.muted));
+        byId('finale-resume').hidden = !finaleAudio.paused || finaleAudio.ended || !!fallbackClock;
+      }
+
+      byId('activate-finale').addEventListener('click', () => {
+        if (animating || finaleCompleted || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        byId('finale-confirm').showModal();
+      });
+      byId('cancel-finale').addEventListener('click', () => byId('finale-confirm').close());
+      byId('confirm-finale').addEventListener('click', () => {
+        if (finaleRunning || finaleCompleted || !byId('finale-confirm').open || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        finaleRunning = true;
+        animating = true;
+        finaleActivated = true;
+        const run = ++finaleRun;
+        fallbackClock = null;
+        lastAudioTime = 0;
+        currentCue = -1;
+        dropSeen = false;
+        // Call play directly in the confirmation gesture, before any asynchronous work.
+        finaleAudio.currentTime = 0;
+        try {
+          const playback = finaleAudio.play();
+          if (playback) playback.catch(() => { if (run === finaleRun) useFallbackClock(); });
+        } catch { useFallbackClock(); }
+        byId('finale-confirm').close();
+        page.inert = true;
+        finaleScreen.append(finaleControls);
+        finaleControls.hidden = !!fallbackClock;
+        finaleScreen.hidden = false;
+        document.body.classList.add('finale-open');
+        save();
+        syncFinale();
+        finaleMessage.focus({ preventScroll: true });
+        updateAudioControls();
+      });
+      byId('finale-mute').addEventListener('click', () => { finaleAudio.muted = !finaleAudio.muted; });
+      byId('finale-exit').addEventListener('click', finishFinale);
+      byId('finale-preview-skip').addEventListener('click', () => {
+        if (!finalePreview || !finaleRunning) return;
+        if (fallbackClock) fallbackClock = { position: DROP_TIME, startedAt: performance.now() };
+        else finaleAudio.currentTime = DROP_TIME;
+        syncFinale();
+        finaleMessage.focus({ preventScroll: true });
+      });
+      byId('finale-resume').addEventListener('click', () => {
+        const run = finaleRun;
+        try { finaleAudio.play()?.catch(() => { if (run === finaleRun) useFallbackClock(); }); }
+        catch { useFallbackClock(); }
+      });
+      finaleAudio.addEventListener('volumechange', updateAudioControls);
+      finaleAudio.addEventListener('loadedmetadata', updateAudioControls);
+      finaleAudio.addEventListener('pause', () => { updateAudioControls(); syncFinale(); });
+      finaleAudio.addEventListener('ratechange', syncFinale);
+      finaleAudio.addEventListener('playing', () => {
+        if (fallbackClock) { finaleAudio.pause(); return; }
+        updateAudioControls();
+        syncFinale();
+      });
+      finaleAudio.addEventListener('error', useFallbackClock);
+      finaleAudio.addEventListener('ended', () => {
+        // An unexpectedly truncated track must not strand the cinematic.
+        if (finaleRunning && finaleTime() < PARTY_READY_TIME) useFallbackClock();
+        else syncFinale();
+        finaleControls.hidden = true;
+      });
+      ['timeupdate', 'seeked'].forEach(name => finaleAudio.addEventListener(name, syncFinale));
+      document.addEventListener('visibilitychange', syncFinale);
+      window.addEventListener('pageshow', syncFinale);
+      reducedMotion.addEventListener('change', syncFinale);
+      finaleScreen.addEventListener('keydown', event => {
+        if (event.key === 'Escape') { finishFinale(); return; }
+        if (event.key !== 'Tab') return;
+        const controls = [...finaleScreen.querySelectorAll('button')].filter(button => !button.hidden && !button.closest('[hidden]'));
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === finaleMessage)) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      });
+
+      function resetFinale() {
+        finaleRun++;
+        finaleRunning = false;
+        finaleActivated = false;
+        finaleCompleted = false;
+        fallbackClock = null;
+        lastAudioTime = 0;
+        currentCue = -1;
+        dropSeen = false;
+        window.cancelAnimationFrame(finaleFrame);
+        finaleFrame = 0;
+        finaleAudio.pause();
+        finaleAudio.currentTime = 0;
+        finaleAudio.muted = false;
+        finaleAudio.volume = 1;
+        finaleAudio.playbackRate = 1;
+        finaleControls.hidden = true;
+        finaleScreen.append(finaleControls);
+        finaleScreen.hidden = true;
+        byId('finale-exit').hidden = true;
+        finaleScreen.classList.remove('drop-impact', 'party-settled');
+        delete finaleScreen.dataset.mode;
+        finaleMessage.textContent = '';
+        finaleMessage.className = 'finale-message';
+        byId('party-particles').replaceChildren();
+        byId('finale-confirm').close();
+        document.body.classList.remove('finale-open');
+        page.inert = false;
+        animating = false;
+        updateAudioControls();
+      }
+
+      byId('finale-reset').addEventListener('click', () => byId('reset-game').click());
       byId('reset-game').addEventListener('click', () => {
-        if (animating || !window.confirm('Resetovať hru? Všetok uložený postup sa vymaže a aktivity sa znova zamknú.')) return;
+        if (finalePreview) {
+          resetFinale();
+          render();
+          reveal(byId('completion'), 'completion-heading');
+          return;
+        }
+        if ((animating && !finaleRunning) || !window.confirm('Resetovať hru? Všetok uložený postup sa vymaže a aktivity sa znova zamknú.')) return;
+        resetFinale();
         stages = activities.map(() => STAGE.LOCKED);
         riddleOpened = activities.map(() => false);
         activeActivity = 0;
@@ -891,6 +1310,15 @@
       const ONBOARDING_KEY = 'misos-bachelor-onboarding-v1';
       const welcome = document.getElementById('welcome');
       const dashboard = document.getElementById('page');
+      // Preview is session-only and bypasses onboarding without touching its saved state.
+      if (new URLSearchParams(window.location.search).get('preview') === 'finale') {
+        welcome.hidden = true;
+        dashboard.hidden = false;
+        document.getElementById('show-instructions').hidden = true;
+        document.getElementById('completion').scrollIntoView({ behavior: 'instant', block: 'start' });
+        document.getElementById('activate-finale').focus({ preventScroll: true });
+        return;
+      }
       const startButton = document.getElementById('start-weekend');
       const helpButton = document.getElementById('show-instructions');
       const boot = document.getElementById('boot-screen');
