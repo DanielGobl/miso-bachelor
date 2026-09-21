@@ -234,7 +234,7 @@
     .boot-progress span { display: block; width: 100%; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; box-shadow: 0 0 18px #d5ee9750; }
     .boot-percentage { margin: 12px 0 22px; text-align: right; color: var(--accent); font: 12px var(--mono); }
     .boot-status { display: flex; align-items: center; justify-content: center; min-height: 7.25em; margin: 0; padding: 0 12px; color: var(--text); font: 700 clamp(20px, 5.6vw, 24px)/1.45 Arial, Helvetica, sans-serif; text-align: center; overflow-wrap: break-word; }
-    .boot-status.status-enter { animation: status-message var(--message-duration, 3050ms) linear both; }
+    .boot-status.status-enter { animation: status-message var(--message-duration, 3300ms) linear both; }
     .boot-status.final-check { color: var(--accent); animation: briefing-in .3s ease-out both; }
     .boot-success { margin: -18px 0 30px; color: var(--accent); font: bold 14px/1.6 var(--mono); }
     .boot-screen.ready h2 { text-shadow: 0 0 28px #d5ee9730; }
@@ -244,7 +244,7 @@
     @keyframes briefing-out { from { opacity: 1; } to { opacity: 0; } }
     @keyframes status-message {
       0% { opacity: 0; transform: translateY(8px); }
-      9.84%, 90.16% { opacity: 1; transform: translateY(0); }
+      9.09%, 90.91% { opacity: 1; transform: translateY(0); }
       100% { opacity: 0; transform: translateY(-6px); }
     }
     @media (min-width: 700px) {
@@ -326,6 +326,45 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+    .mission-timer { margin: 0 0 22px; padding: 14px 0; border-block: 1px solid var(--line); text-align: left; color: var(--accent); font-family: var(--mono); }
+    .timer-label, .timer-status { display: block; font-size: 10px; line-height: 1.7; letter-spacing: 1px; }
+    .timer-status { white-space: pre-line; }
+    .timer-value { display: block; margin: 6px 0 10px; font-size: 30px; font-variant-numeric: tabular-nums; }
+    .timer-track { height: 3px; background: #d5ee971c; overflow: hidden; }
+    .timer-fill { display: block; height: 100%; background: currentColor; transform-origin: left; }
+    .mission-timer.expired { color: #edb095; }
+    .riddle-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .riddle-header h2 { margin: 0; font-size: 20px; }
+    .riddle-header .mission-timer { margin: 0; border: 0; padding: 0; }
+    .riddle-header .timer-value { font-size: 24px; }
+    .riddle-hints { margin-top: 24px; text-align: left; border-top: 1px solid var(--line); }
+    .riddle-hints h3 { color: var(--muted); font: 10px var(--mono); letter-spacing: 1px; margin: 18px 0 8px; }
+    .hint-row { border-bottom: 1px solid var(--line); }
+    .hint-toggle { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; min-height: 48px; padding: 10px 0; border: 0; background: transparent; color: var(--accent); text-align: left; font: 11px/1.5 var(--mono); }
+    .riddle .hint-copy { margin: 0; padding: 0 0 15px; font-size: 13px; animation: briefing-in .25s ease-out both; }
+    .cold-open { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; overflow-y: auto; padding: 24px; background: #090e08; color: var(--accent); }
+    .flight-panel { width: 100%; max-width: 520px; text-align: center; }
+    .flight-map { display: block; width: 100%; height: auto; margin: 24px 0; background-image: linear-gradient(#d5ee9708 1px, transparent 1px), linear-gradient(90deg, #d5ee9708 1px, transparent 1px); background-size: 28px 28px; }
+    .flight-map text { fill: var(--accent); font: 13px var(--mono); }
+    .flight-locations { opacity: 0; transition: opacity .5s; }
+    .route-visible .flight-locations { opacity: 1; }
+    #flight-route { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s; }
+    .route-visible #flight-route { stroke-dashoffset: 0; }
+    #flight-plane { filter: drop-shadow(0 0 5px #d5ee9770); }
+    .flight-arrived #warsaw-pulse { animation: destination-pulse 1.5s ease-out infinite; }
+    .cold-open h2 { min-height: 3.5em; margin: 0; font: bold clamp(20px, 5.5vw, 28px)/1.5 var(--mono); }
+    .cold-open h2:focus { outline: none; }
+    .cold-open .cold-message-enter { animation: cold-message var(--cold-step-duration) linear both; }
+    @keyframes cold-message {
+      0%, 100% { opacity: 0; }
+      9.09%, 90.91% { opacity: 1; }
+    }
+    .cold-open.leaving { animation: briefing-out .4s ease both; }
+    @keyframes destination-pulse { from { opacity: .8; r: 8; } to { opacity: 0; r: 22; } }
+    @media (prefers-reduced-motion: reduce) {
+      .flight-locations, #flight-route { transition: none; }
+      .cold-open.leaving, .flight-arrived #warsaw-pulse, .riddle .hint-copy { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -350,12 +389,9 @@
         <li><span class="step-number" aria-hidden="true">03</span><span>Splníš úlohu → stlačíš „SPLNIL SOM ÚLOHU“ → vyriešiš hádanku → odhalíš, kam ideme a čo ťa čaká.</span></li>
       </ol>
     </section>
-    <section class="welcome-block" aria-label="Pravidlá misie">
-      <p>Žiadne preskakovanie.<br>Žiadne vyjednávanie.<br>Žiadne googlenie hesiel. 😄</p>
-    </section>
     <div class="welcome-block">
       <p class="weekend-count">4 aktivity.<br>4 výzvy.<br>Jeden posledný slobodný víkend.</p>
-      <p class="good-luck">Veľa šťastia, Mišo.</p>
+      <p class="good-luck">Veľa šťastia.</p>
       <button class="unlock-button start-weekend" id="start-weekend" type="button">ZAČAŤ VÍKEND</button>
     </div>
   </main>
@@ -499,7 +535,6 @@
         <strong><time datetime="11:00">11:00</time> – <time datetime="12:30">12:30</time></strong><span>MIESTNY ČAS VO VARŠAVE</span>
       </div>
       <p>Nového parťáka si našiel.<br>Teraz je čas zistiť, či ti tí starí dokážu kryť chrbát.</p>
-      <p>Porazený tím kupuje víťaznému tímu pivo alebo shot.</p>
     </section>
 
     <section class="mission" id="challenge-four" aria-labelledby="challenge-four-heading" hidden>
@@ -623,7 +658,7 @@
       const activities = [
         {
           card: 'activity-one', challenge: 'challenge', destination: 'destination', challengeCode: 'EXPERIMENT',
-          riddle: ['Do istého bodu som bol cestovateľom.', 'Potom jeden veľmi šumný pán zistil,\nže v skutočnosti sú cestovatelia všetci okolo mňa.', 'Kto som?'],
+          riddle: ['Do istého bodu som bol cestovateľom.', 'Potom jeden Poliak zistil,\nže v skutočnosti sú cestovatelia všetci okolo mňa.', 'Kto som?'],
           answers: ['slnko'], wrongAnswer: 'Experiment nevyšiel. Skús ďalšiu hypotézu.'
         },
         {
@@ -657,6 +692,7 @@
       let stages = activities.map(() => STAGE.LOCKED);
       // A presentation substep within CHALLENGE; the three existing stage values stay compatible.
       let riddleOpened = activities.map(() => false);
+      let timers = activities.map(() => ({ challengeStartedAt: null, riddleStartedAt: null, hintsOpened: [false, false, false] }));
       let activeActivity = 0;
       let animating = false;
       let finaleActivated = false;
@@ -673,6 +709,15 @@
           finaleCompleted = stages.every(stage => stage === STAGE.UNLOCKED) && saved.finaleCompleted === true;
           finaleActivated = stages.every(stage => stage === STAGE.UNLOCKED) && (saved.finaleActivated === true || finaleCompleted);
           riddleOpened = stages.map((stage, index) => stage !== STAGE.LOCKED && saved.riddleOpened?.[index] === true);
+          timers = timers.map((empty, index) => {
+            const stored = saved.timers?.[index];
+            const validTime = value => Number.isFinite(value) && value > 0 ? value : null;
+            return stages[index] === STAGE.LOCKED ? empty : {
+              challengeStartedAt: validTime(stored?.challengeStartedAt),
+              riddleStartedAt: riddleOpened[index] ? validTime(stored?.riddleStartedAt) : null,
+              hintsOpened: empty.hintsOpened.map((_, hint) => riddleOpened[index] && stored?.hintsOpened?.[hint] === true)
+            };
+          });
           if (Number.isInteger(saved.activeActivity) && saved.activeActivity >= 0 && saved.activeActivity < activities.length) {
             activeActivity = saved.activeActivity;
           }
@@ -690,7 +735,7 @@
       function save() {
         if (finalePreview) return;
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened, finaleActivated, finaleCompleted }));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ stages, activeActivity, riddleOpened, timers, finaleActivated, finaleCompleted }));
           byId('storage-note').textContent = 'Postup je uložený v tomto zariadení.';
         } catch {
           storageUnavailable();
@@ -711,7 +756,97 @@
         byId('exit-finale-preview').href = gameURL.href;
       }
 
+      const hints = [
+        ['Som tu oveľa dlhšie ako ten Poliak.', 'Vitamín D.', 'Každé ráno ma hľadáš na oblohe.'],
+        ['Pomáham ľuďom nájsť správnu cestu.', 'Nepotrebujem mapu, aby som vedel, kam ukázať.', 'Sever je moja slabosť.'],
+        ['Farbu mením podľa toho, v akom stave sa nachádzam.', 'Moja červená fáza poriadne hreje.', 'Po použití zo mňa zostane popol.'],
+        ['To, že bežím, neznamená, že mám nohy.', 'Aby som fungoval, potrebujem gravitáciu.', 'Moje hrdlo udáva rýchlosť, akou plynie čas.']
+      ];
+
+      function createTimer(label) {
+        const element = document.createElement('div');
+        element.className = 'mission-timer';
+        element.innerHTML = `<span class="timer-label">${label}</span><strong class="timer-value" role="timer" aria-label="Zostávajúci čas">00:00</strong><div class="timer-track" aria-hidden="true"><span class="timer-fill"></span></div><span class="timer-status" role="status"></span>`;
+        return element;
+      }
+      const challengeTimers = activities.map(mission => {
+        const element = createTimer('ČAS NA SPLNENIE');
+        byId(`${mission.challenge}-heading`).after(element);
+        return element;
+      });
+      const riddleTimer = createTimer('ČAS NA HÁDANKU');
+      const riddleHeader = document.createElement('div');
+      riddleHeader.className = 'riddle-header';
+      byId('riddle-heading').before(riddleHeader);
+      riddleHeader.append(byId('riddle-heading'), riddleTimer);
+      const hintPanel = document.createElement('section');
+      hintPanel.className = 'riddle-hints';
+      hintPanel.setAttribute('aria-label', 'Nápovedy');
+      hintPanel.innerHTML = '<h3>NÁPOVEDY</h3>';
+      riddleForm.after(hintPanel);
+      const hintRows = hints[0].map((_, index) => {
+        const row = document.createElement('div');
+        row.className = 'hint-row';
+        row.innerHTML = `<button type="button" class="hint-toggle" aria-expanded="false" aria-controls="hint-copy-${index}"><span><span class="hint-chevron" aria-hidden="true">▸</span> NÁPOVEDA ${index + 1}</span></button><p class="hint-copy" id="hint-copy-${index}" hidden></p>`;
+        hintPanel.append(row);
+        row.querySelector('button').addEventListener('click', () => {
+          const state = timers[activeActivity];
+          if (animating || riddle.hidden || page.hidden) return;
+          state.hintsOpened[index] = !state.hintsOpened[index];
+          save();
+          updateTimers();
+        });
+        return row;
+      });
+      const elapsedSince = startedAt => Math.max(0, Date.now() - startedAt);
+      function formatTime(milliseconds) {
+        const seconds = Math.ceil(Math.max(0, milliseconds) / 1000);
+        return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+      }
+      // Older saves acquire a timestamp only when their current screen is first available.
+      function ensureVisibleTimer() {
+        if (page.hidden || animating || stages[activeActivity] !== STAGE.CHALLENGE) return;
+        const key = riddleOpened[activeActivity] ? 'riddleStartedAt' : 'challengeStartedAt';
+        if (timers[activeActivity][key] === null) {
+          timers[activeActivity][key] = Date.now();
+          save();
+        }
+      }
+      function paintTimer(element, startedAt, duration, challenge) {
+        const remaining = Math.max(0, duration - elapsedSince(startedAt));
+        element.querySelector('.timer-value').textContent = formatTime(remaining);
+        element.querySelector('.timer-fill').style.transform = `scaleX(${remaining / duration})`;
+        element.classList.toggle('expired', remaining === 0);
+        const message = remaining === 0 ? `ČAS VYPRŠAL ⚠${challenge ? '\nMISIA POKRAČUJE NA VLASTNÉ RIZIKO.' : ''}` : '';
+        const status = element.querySelector('.timer-status');
+        if (status.textContent !== message) status.textContent = message;
+      }
+      function updateTimers() {
+        if (page.hidden || animating || stages[activeActivity] !== STAGE.CHALLENGE) return;
+        ensureVisibleTimer();
+        const state = timers[activeActivity];
+        if (!riddleOpened[activeActivity]) {
+          paintTimer(challengeTimers[activeActivity], state.challengeStartedAt, 3600000, true);
+          return;
+        }
+        paintTimer(riddleTimer, state.riddleStartedAt, 600000, false);
+        hintRows.forEach((row, index) => {
+          const opened = state.hintsOpened[index];
+          const button = row.querySelector('button');
+          button.setAttribute('aria-expanded', String(opened));
+          row.querySelector('.hint-chevron').textContent = opened ? '▾' : '▸';
+          const copy = row.querySelector('.hint-copy');
+          copy.textContent = hints[activeActivity][index];
+          copy.hidden = !opened;
+        });
+      }
+      window.setInterval(updateTimers, 250);
+      document.addEventListener('visibilitychange', updateTimers);
+      window.addEventListener('pageshow', updateTimers);
+      window.addEventListener('bachelor:dashboard', updateTimers);
+
       function render() {
+        ensureVisibleTimer();
         const unlockedCount = stages.filter(stage => stage === STAGE.UNLOCKED).length;
         activities.forEach((mission, index) => {
           const stage = stages[index];
@@ -748,6 +883,7 @@
             return paragraph;
           }));
         }
+        updateTimers();
         byId('progress').textContent = `${String(unlockedCount).padStart(2, '0')} / 04 ODOMKNUTÉ`;
         byId('completion').hidden = unlockedCount !== activities.length;
         byId('activate-finale').hidden = finaleCompleted;
@@ -1028,13 +1164,15 @@
         [21, 'Možno sa všetci nepoznáme roky.\nMožno sa niektorí poriadne spoznali až tento víkend.'],
         [28, 'Ale všetci sme sem prišli kvôli jednému človeku.'],
         [33, 'KVÔLI TEBE.'],
-        [39, 'Dnes je posledná noc,\nktorú spolu zažijeme ešte predtým,\nnež sa zo ženícha stane manžel.'],
+        [39, 'Dnes je posledná noc,\nktorú spolu zažijeme ešte predtým,\nnež sa zo slobodného Miša stane ženatý Mišo.'],
         [46, 'Tak si ju zapamätaj.'],
         [50, 'Na všetky hovadiny, ktoré máš za sebou.\nNa ľudí, ktorí pri tom boli.\nA na všetko dobré, čo ťa ešte len čaká.'],
-        [58, 'Uži si poslednú noc ako ženích, Mišo.'],
+        [58, 'Tak si túto noc poriadne uži.'],
         [62, 'Sme radi, že ju môžeme zažiť s tebou.'],
         [DROP_TIME, 'EMOCIONÁLNY REŽIM UKONČENÝ...'],
         [DROP_TIME + PARTY_TEXT_INTERVAL, 'AKTIVUJEM NOČNÝ REŽIM...'],
+        [DROP_TIME + PARTY_TEXT_INTERVAL * 2, 'DEAKTIVUJEM BEZPEČNOSTNÉ PROTOKOLY...'],
+        [DROP_TIME + PARTY_TEXT_INTERVAL * 3, 'SPÚŠŤAM KONTROLOVANÝ CHAOS...'],
         [PARTY_STATEMENT_TIME, 'ČO SA STANE VO VARŠAVE,\nZOSTANE VO VARŠAVE.']
       ];
       let finaleRunning = false;
@@ -1284,6 +1422,7 @@
         resetFinale();
         stages = activities.map(() => STAGE.LOCKED);
         riddleOpened = activities.map(() => false);
+        timers = activities.map(() => ({ challengeStartedAt: null, riddleStartedAt: null, hintsOpened: [false, false, false] }));
         activeActivity = 0;
         try {
           localStorage.removeItem(STORAGE_KEY);
@@ -1308,6 +1447,7 @@
     (() => {
       'use strict';
       const ONBOARDING_KEY = 'misos-bachelor-onboarding-v1';
+      const COLD_OPEN_KEY = 'misos-bachelor-cold-open-v1';
       const welcome = document.getElementById('welcome');
       const dashboard = document.getElementById('page');
       // Preview is session-only and bypasses onboarding without touching its saved state.
@@ -1330,23 +1470,24 @@
       const status = document.getElementById('boot-status');
       const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
       const messages = [
-        'NAČÍTAVAM VARŠAVU...',
         'KONTROLUJEM ZÁSOBY PIVA...',
-        'ZAMYKÁM TAJNÉ AKTIVITY...',
-        'PRIPRAVUJEM POCHYBNÉ ROZHODNUTIA...',
-        'KONTROLUJEM, ČI JE MIŠO PRIPRAVENÝ...',
-        'ODSTRAŇUJEM MIŠOVU KONTROLU NAD PROGRAMOM...',
-        'AKTIVUJEM REŽIM ŽENÍCH...',
         'SYNCHRONIZUJEM PARTIU...',
-        'KONTROLUJEM ÚNIK TAJNÝCH INFORMÁCIÍ...',
-        'PRIPRAVUJEM VARŠAVU NA PRÍCHOD MIŠA...'
+        'PRIPRAVUJEM FINANCIE...',
+        'KALIBRUJEM PEČEŇ...',
+        'PRIPRAVUJEM POCHYBNÉ ROZHODNUTIA...',
+        'KONTAKTUJEM BOBRY...',
+        'MAŽEM SIMINE ČÍSLO...',
+        'KONTAKTUJEM DÍLERA...',
+        'MAŽEM HISTÓRIU PREHLIADAČA...',
+        'ZABEZPEČUJEM DIPLOMATICKÚ IMUNITU...',
+        'AKTIVUJEM REŽIM ŽENÍCH...'
       ];
-      // Each message: 300ms in, 2450ms fully visible, 300ms out.
-      // 30.5s of messages + 2s final check + 2s success + fades: about 35s.
-      const messageDuration = 3050;
+      // Each message: 300ms in, 2700ms fully visible, 300ms out.
+      // Eleven messages, a 2.8s final check, then 2s at 100%.
+      const messageDuration = 3300;
       const finalCheckStarts = messages.length * messageDuration;
-      const loadingDuration = finalCheckStarts + 2000;
-      const progressStops = [0, 8, 17, 27, 38, 48, 61, 71, 81, 91, 98];
+      const loadingDuration = finalCheckStarts + 2800;
+      const progressStops = Array.from({ length: messages.length + 1 }, (_, index) => Math.round(index * 98 / messages.length));
       status.style.setProperty('--message-duration', `${messageDuration}ms`);
       let completed = false;
       let starting = false;
@@ -1356,6 +1497,88 @@
       let timer;
 
       try { completed = localStorage.getItem(ONBOARDING_KEY) === 'complete'; } catch { /* Session-only onboarding when storage is unavailable. */ }
+
+      const cold = document.createElement('section');
+      cold.className = 'cold-open';
+      cold.hidden = true;
+      cold.setAttribute('aria-label', 'Let do Varšavy');
+      cold.innerHTML = `<div class="flight-panel"><p class="eyebrow">RIADENIE MISIE / LETOVÁ TRASA</p>
+        <svg class="flight-map" viewBox="0 0 440 280" role="img" aria-label="Letová trasa z Bratislavy do Varšavy">
+          <g class="flight-locations">
+            <path id="flight-route" d="M 65 205 Q 90 65 350 80" pathLength="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="65" cy="205" r="5" fill="currentColor"/><circle cx="350" cy="80" r="5" fill="currentColor"/>
+            <circle id="warsaw-pulse" cx="350" cy="80" r="11" fill="none" stroke="currentColor" opacity=".5"/>
+            <text x="22" y="243">BRATISLAVA 🇸🇰</text><text x="288" y="48">VARŠAVA 🇵🇱</text>
+          </g>
+          <g id="flight-plane" hidden><path d="M 13 0 L -9 -10 L -5 -2 L -12 -2 L -14 -5 L -16 -5 L -14 0 L -16 5 L -14 5 L -12 2 L -5 2 L -9 10 Z" fill="currentColor"/></g>
+        </svg><h2 id="cold-message" tabindex="-1" role="status" aria-live="polite" aria-atomic="true"></h2></div>`;
+      document.body.append(cold);
+      function runColdOpen() {
+        starting = true;
+        welcome.hidden = true;
+        dashboard.hidden = true;
+        boot.hidden = true;
+        cold.classList.remove('route-visible', 'flight-arrived', 'leaving');
+        cold.hidden = false;
+        const heading = document.getElementById('cold-message');
+        const plane = document.getElementById('flight-plane');
+        const route = document.getElementById('flight-route');
+        plane.setAttribute('hidden', '');
+        const flightDuration = 8000;
+        const steps = [
+          ['INICIALIZUJEM OPERÁCIU...', 3300], ['LOKALIZUJEM CIEĽ...', 3300],
+          ['BRATISLAVA → VARŠAVA', 3300], ['TRASA POTVRDENÁ ✓', 3300],
+          ['LET DO VARŠAVY...', flightDuration], ['PRISTÁTIE POTVRDENÉ ✓', 3300],
+          ['CIEĽ DOSIAHNUTÝ', 3300], ['VITAJ V POĽSKU, MIŠO.', 3300]
+        ];
+        function positionPlane(fraction) {
+          const length = route.getTotalLength();
+          const point = route.getPointAtLength(length * fraction);
+          const next = route.getPointAtLength(Math.min(length, length * fraction + 1));
+          const previous = route.getPointAtLength(Math.max(0, length * fraction - 1));
+          const angle = Math.atan2(next.y - previous.y, next.x - previous.x) * 180 / Math.PI;
+          plane.setAttribute('transform', `translate(${point.x} ${point.y}) rotate(${angle})`);
+        }
+        function step(index) {
+          heading.classList.remove('cold-message-enter');
+          heading.textContent = steps[index][0];
+          heading.style.setProperty('--cold-step-duration', `${steps[index][1]}ms`);
+          void heading.offsetWidth;
+          heading.classList.add('cold-message-enter');
+          if (index === 0) heading.focus({ preventScroll: true });
+          if (index === 2) cold.classList.add('route-visible');
+          if (index === 4) {
+            plane.removeAttribute('hidden');
+            positionPlane(0);
+            const began = performance.now();
+            function fly(now) {
+              const fraction = Math.min(1, (now - began) / flightDuration);
+              // Reduced motion uses static departure/arrival markers with the same reading time.
+              if (!motion.matches) positionPlane(fraction);
+              if (fraction < 1) frame = requestAnimationFrame(fly);
+            }
+            frame = requestAnimationFrame(fly);
+          }
+          if (index === 5) {
+            cancelAnimationFrame(frame);
+            positionPlane(1);
+            cold.classList.add('flight-arrived');
+          }
+          timer = setTimeout(() => {
+            if (index + 1 < steps.length) step(index + 1);
+            else {
+              try { localStorage.setItem(COLD_OPEN_KEY, 'complete'); } catch { /* Session-only completion. */ }
+              cold.classList.add('leaving');
+              timer = setTimeout(() => {
+                cold.hidden = true;
+                starting = false;
+                showWelcome();
+              }, motion.matches ? 0 : 400);
+            }
+          }, steps[index][1]);
+        }
+        step(0);
+      }
 
       function showWelcome(review = false, focus = true) {
         reviewing = review;
@@ -1378,6 +1601,7 @@
         welcome.hidden = true;
         boot.hidden = true;
         dashboard.hidden = false;
+        window.dispatchEvent(new Event('bachelor:dashboard'));
         if (animate) {
           dashboard.classList.remove('dashboard-enter');
           void dashboard.offsetWidth;
@@ -1414,7 +1638,7 @@
         const index = Math.floor(elapsed / messageDuration);
         const withinMessage = elapsed - index * messageDuration;
         // Wait through the entrance, ease forward, then hold during the exit.
-        const fraction = Math.min(1, Math.max(0, (withinMessage - 300) / 2200));
+        const fraction = Math.min(1, Math.max(0, (withinMessage - 300) / (messageDuration - 600)));
         const eased = fraction * fraction * (3 - 2 * fraction);
         return Math.floor(progressStops[index] + eased * (progressStops[index + 1] - progressStops[index]));
       }
@@ -1479,12 +1703,21 @@
         window.clearTimeout(timer);
         completed = false;
         starting = false;
-        try { localStorage.removeItem(ONBOARDING_KEY); } catch { /* Reset in memory even if storage is unavailable. */ }
-        showWelcome();
+        try {
+          localStorage.removeItem(ONBOARDING_KEY);
+          localStorage.removeItem(COLD_OPEN_KEY);
+        } catch { /* Reset in memory even if storage is unavailable. */ }
+        runColdOpen();
       });
 
+      let coldCompleted = completed;
+      try {
+        // Existing players retain their current experience; only fresh games get the new intro.
+        coldCompleted ||= localStorage.getItem(COLD_OPEN_KEY) === 'complete' || localStorage.getItem('misos-bachelor-weekend-v1') !== null;
+      } catch { /* Keep the intro usable without persistent storage. */ }
       if (completed) showDashboard();
-      else showWelcome(false, false);
+      else if (coldCompleted) showWelcome(false, false);
+      else runColdOpen();
     })();
   </script>
 </body>

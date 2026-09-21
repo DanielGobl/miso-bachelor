@@ -199,7 +199,7 @@ with sync_playwright() as playwright:
     assert not page.locator('#activate-finale').is_visible()
     page.on('dialog', lambda dialog: dialog.accept())
     page.locator('#reset-game').click()
-    assert page.locator('#welcome').is_visible()
+    assert page.locator('.cold-open').is_visible()
     assert page.evaluate('key => localStorage.getItem(key)', KEY) is None
     assert page.locator('#finale-audio').evaluate('(a) => a.paused && a.currentTime === 0 && !a.muted && a.volume === 1')
     print('PASS immediate emotional opening, all cues, visibility catch-up, layout, persistent party, manual exit and reset')
@@ -216,7 +216,7 @@ with sync_playwright() as playwright:
     assert 'drop-impact' not in reduced.locator('#finale-screen').get_attribute('class')
     reduced.on('dialog', lambda dialog: dialog.accept())
     reduced.locator('#finale-reset').click()
-    assert reduced.locator('#welcome').is_visible()
+    assert reduced.locator('.cold-open').is_visible()
     assert reduced.locator('#finale-audio').evaluate('(a) => a.paused && a.currentTime === 0')
     print('PASS reduced motion and reset during cinematic')
 
