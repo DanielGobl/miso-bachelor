@@ -15,7 +15,7 @@ SEED = {'stages': [2, 2, 2, 2], 'riddleOpened': [True] * 4, 'activeActivity': 3}
 ERRORS = []
 DROP_TIME = 66.6
 TWO_BARS = 8 * 60 / 130
-PARTY_CUES = [DROP_TIME + TWO_BARS * index for index in range(3)]
+PARTY_CUES = [DROP_TIME + TWO_BARS * index for index in range(5)]
 
 
 def new_page(browser, *, reduced=False, fail=False, seed=SEED):
@@ -82,7 +82,7 @@ def state(page):
 
 
 with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(channel='chrome', headless=True, args=['--mute-audio'])
+    browser = playwright.chromium.launch(channel=os.environ.get('BROWSER_CHANNEL', 'chrome'), headless=True, args=['--mute-audio'])
     page = new_page(browser)
     assert state(page)['calls'] == 0 and state(page)['paused'] and state(page)['time'] == 0
     page.reload()
@@ -116,16 +116,18 @@ with sync_playwright() as playwright:
     cues = [(0, 'Mišo,'), (4, 'úlohy'), (10, 'Ale to'), (15, 'Dnes sú'),
             (21, 'Možno'), (28, 'Ale všetci'), (33, 'KVÔLI TEBE.'),
             (39, 'Dnes je'), (46, 'Tak si'), (50, 'Na všetky'),
-            (58, 'Uži si'), (62, 'Sme radi'), (DROP_TIME - .001, 'Sme radi'), (PARTY_CUES[0], 'EMOCIONÁLNY'),
+            (58, 'Tak si túto noc'), (62, 'Sme radi'), (DROP_TIME - .001, 'Sme radi'), (PARTY_CUES[0], 'EMOCIONÁLNY'),
             (PARTY_CUES[1] - .001, 'EMOCIONÁLNY'), (PARTY_CUES[1], 'AKTIVUJEM'),
-            (PARTY_CUES[2] - .001, 'AKTIVUJEM'), (PARTY_CUES[2], 'ČO SA STANE')]
+            (PARTY_CUES[2] - .001, 'AKTIVUJEM'), (PARTY_CUES[2], 'DEAKTIVUJEM BEZPEČNOSTNÉ PROTOKOLY...'),
+            (PARTY_CUES[3] - .001, 'DEAKTIVUJEM'), (PARTY_CUES[3], 'SPÚŠŤAM KONTROLOVANÝ CHAOS...'),
+            (PARTY_CUES[4] - .001, 'SPÚŠŤAM'), (PARTY_CUES[4], 'ČO SA STANE')]
     for time, text in cues:
         seek(page, time)
         result = state(page)
         assert result['text'].startswith(text), (time, result)
         assert result['mode'] == ('party' if time >= DROP_TIME else 'emotion')
-        assert ('statement' in page.locator('#finale-message').get_attribute('class')) == (time >= PARTY_CUES[2])
-        assert page.locator('#finale-label').is_visible() == (time < PARTY_CUES[2])
+        assert ('statement' in page.locator('#finale-message').get_attribute('class')) == (time >= PARTY_CUES[4])
+        assert page.locator('#finale-label').is_visible() == (time < PARTY_CUES[4])
         assert page.locator('#finale-screen .party-status').count() == 0
     assert page.locator('.party-spark').count() == 0
     assert page.locator('#party-visuals').is_visible()
@@ -156,7 +158,7 @@ with sync_playwright() as playwright:
             assert all(abs(clock['time'] - (time - DROP_TIME) * 1000) < 1 and clock['state'] == 'paused' for clock in lights['clocks'])
     print('PASS exactly one flash per beat; both layers follow audio position, including the drop')
     # Resume rendering from the current position, without replaying missed cues.
-    for time, expected in [(45, 'Dnes je'), (DROP_TIME + .3, 'EMOCIONÁLNY'), (76, 'ČO SA STANE'), (80, 'ČO SA STANE')]:
+    for time, expected in [(45, 'Dnes je'), (DROP_TIME + .3, 'EMOCIONÁLNY'), (76, 'DEAKTIVUJEM'), (80, 'SPÚŠŤAM'), (84, 'ČO SA STANE')]:
         page.evaluate("""time => {
             Object.defineProperty(document, 'hidden', {configurable: true, value: true});
             document.dispatchEvent(new Event('visibilitychange'));
@@ -168,12 +170,12 @@ with sync_playwright() as playwright:
     # Check long emotional blocks and the headline at narrow and landscape sizes.
     for width, height in [(320, 568), (390, 844), (844, 390), (1440, 900)]:
         page.set_viewport_size({'width': width, 'height': height})
-        for time in [21, 43, 52, PARTY_CUES[2]]:
+        for time in [21, 43, 52, PARTY_CUES[2], PARTY_CUES[3], PARTY_CUES[4]]:
             seek(page, time)
             box = page.locator('#finale-message').bounding_box()
             assert box['x'] >= 0 and box['x'] + box['width'] <= width + 1, (width, time, box)
             assert box['y'] >= 0 and box['y'] + box['height'] <= height, (height, time, box)
-            if os.environ.get('FINALE_SCREENSHOTS') and width == 390 and time in [43, PARTY_CUES[2]]:
+            if os.environ.get('FINALE_SCREENSHOTS') and width == 390 and time in [43, PARTY_CUES[4]]:
                 page.screenshot(path=str(Path(os.environ['FINALE_SCREENSHOTS']) / ('finale-%s.png' % time)), animations='disabled')
     page.set_viewport_size({'width': 390, 'height': 844})
     seek(page, 83.99)
@@ -259,9 +261,9 @@ with sync_playwright() as playwright:
     failed.evaluate('window.clockOffset = 70500')
     failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('AKTIVUJEM')")
     failed.evaluate('window.clockOffset = 74000')
-    failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('ČO SA STANE')")
+    failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('DEAKTIVUJEM')")
     failed.evaluate('window.clockOffset = 78000')
-    failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('ČO SA STANE')")
+    failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('SPÚŠŤAM')")
     failed.evaluate('window.clockOffset = 84000')
     failed.wait_for_function("document.getElementById('finale-message').textContent.startsWith('ČO SA STANE')")
     assert failed.locator('#finale-screen').is_visible()

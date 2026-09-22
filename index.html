@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#10130f">
   <meta name="description" content="Štyri aktivity. Jeden ženích. Tvoja varšavská misia sa začína tu.">
   <title>MIŠOVA ROZLÚČKA SO SLOBODOU</title>
+  <link rel="stylesheet" href="assets/activity-navigation.css">
   <style>
     :root {
       color-scheme: dark;
@@ -647,6 +648,7 @@
   </section>
   <audio id="finale-audio" src="assets/finale.mp3" preload="metadata" playsinline></audio>
 
+  <script src="assets/activity-navigation.js"></script>
   <script>
     (() => {
       'use strict';
@@ -763,6 +765,8 @@
         ['To, že bežím, neznamená, že mám nohy.', 'Aby som fungoval, potrebujem gravitáciu.', 'Moje hrdlo udáva rýchlosť, akou plynie čas.']
       ];
 
+      const activityNavigation = createActivityNavigation(activities, index => stages[index] === STAGE.UNLOCKED);
+
       function createTimer(label) {
         const element = document.createElement('div');
         element.className = 'mission-timer';
@@ -846,6 +850,7 @@
       window.addEventListener('bachelor:dashboard', updateTimers);
 
       function render() {
+        activityNavigation.sync();
         ensureVisibleTimer();
         const unlockedCount = stages.filter(stage => stage === STAGE.UNLOCKED).length;
         activities.forEach((mission, index) => {
@@ -1123,7 +1128,8 @@
       const PARTY_BPM = 130;
       // In 4/4, two bars contain eight beats. Keep full precision for media-time cues.
       const PARTY_TEXT_INTERVAL = (60 / PARTY_BPM) * 4 * 2;
-      const PARTY_STATEMENT_TIME = DROP_TIME + PARTY_TEXT_INTERVAL * 2;
+      // Show all four party messages before the persistent Warsaw statement.
+      const PARTY_STATEMENT_TIME = DROP_TIME + PARTY_TEXT_INTERVAL * 4;
       const PARTY_READY_TIME = Math.max(PARTY_STATEMENT_TIME, DROP_TIME + 6);
       const finaleAudio = byId('finale-audio');
       const finaleScreen = byId('finale-screen');

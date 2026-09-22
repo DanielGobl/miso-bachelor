@@ -1,0 +1,6 @@
+.ops-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 14px; border: 1px solid #78924d; border-radius: 2px; background: #222b1b; color: var(--accent); font: bold 11px/1.5 var(--mono); letter-spacing: .7px; text-align: center; text-decoration: none; touch-action: manipulation; }
+.ops-button:hover { background: #314123; border-color: var(--accent); }
+.ops-button:disabled { opacity: .5; }
+.activity-navigation .ops-button { width: 100%; }
+.activity-navigation { margin-top: 23px; padding-top: 18px; border-top: 1px solid #3b482e; }
+.activity-navigation p { white-space: pre-line; overflow-wrap: anywhere; }
