@@ -117,22 +117,32 @@ with sync_playwright() as playwright:
 
     loading = new_page(browser, onboarded=False)
     loading.clock.install()
+    loading.evaluate("""() => {
+        const audio = document.getElementById('main-audio');
+        let songTime = 0;
+        Object.defineProperty(audio, 'currentTime', {
+            configurable: true, get: () => songTime, set: value => { songTime = value; }
+        });
+        window.setSongTime = time => {
+            songTime = time;
+            audio.dispatchEvent(new Event('timeupdate'));
+        };
+    }""")
     loading.locator('#start-weekend').click()
-    loading.clock.fast_forward(220)
     messages = [
         'KONTROLUJEM ZÁSOBY PIVA...', 'SYNCHRONIZUJEM PARTIU...', 'PRIPRAVUJEM FINANCIE...',
         'KALIBRUJEM PEČEŇ...', 'PRIPRAVUJEM POCHYBNÉ ROZHODNUTIA...', 'KONTAKTUJEM BOBRY...',
         'MAŽEM SIMINE ČÍSLO...', 'KONTAKTUJEM DÍLERA...', 'MAŽEM HISTÓRIU PREHLIADAČA...',
         'ZABEZPEČUJEM DIPLOMATICKÚ IMUNITU...', 'AKTIVUJEM REŽIM ŽENÍCH...'
     ]
-    for message in messages:
+    for index, message in enumerate(messages):
+        loading.evaluate('setSongTime', index * 2 + .3)
         expect(loading.locator('#boot-status')).to_have_text(message)
-        loading.clock.fast_forward(3300)
+    loading.evaluate('setSongTime', 22)
     expect(loading.locator('#boot-status')).to_have_text('POSLEDNÁ KONTROLA...')
-    loading.clock.fast_forward(2800)
+    loading.evaluate('setSongTime', 24)
     expect(loading.locator('#boot-percentage')).to_have_text('100%')
-    loading.clock.fast_forward(2000)
-    loading.clock.fast_forward(200)
+    loading.evaluate('setSongTime', 26)
     expect(loading.locator('#page')).to_be_visible()
     print('PASS all 11 custom loading messages and completed onboarding')
     assert not ERRORS, ERRORS

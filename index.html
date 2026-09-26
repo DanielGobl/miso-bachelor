@@ -308,8 +308,10 @@
     .party-meter:nth-child(3n + 2) { --low: .65; }
     .party-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
     .party-spark { position: absolute; top: 50%; left: 50%; width: 3px; height: 16px; background: #d5ee97; box-shadow: 0 0 12px #c4f77570; animation: party-spark 2.4s ease-out both; }
-    .finale-controls { position: fixed; top: max(24px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right)); z-index: 40; display: flex; gap: 8px; }
-    .finale-controls button { min-width: 44px; min-height: 44px; padding: 8px 12px; color: var(--accent); border: 1px solid #d5ee9740; border-radius: 3px; background: #10180fe8; font: 12px var(--mono); }
+    .finale-controls, .music-controls { position: fixed; top: max(24px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right)); z-index: 40; display: flex; gap: 8px; }
+    .finale-controls button, .music-controls button { min-width: 44px; min-height: 44px; padding: 8px 12px; color: var(--accent); border: 1px solid #d5ee9740; border-radius: 3px; background: #10180fe8; font: 12px var(--mono); }
+    .music-controls { top: auto; bottom: max(24px, env(safe-area-inset-bottom)); }
+    body.normal-music .page { padding-bottom: 96px; }
     .finale-actions { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); left: 26px; right: 26px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .finale-exit { padding: 10px 0; color: var(--accent); text-align: left; }
     .finale-reset { margin-left: auto; padding-left: 0; font-size: 9px; }
@@ -505,7 +507,7 @@
 
     <section class="mission destination" id="destination-two" aria-labelledby="destination-two-heading" hidden>
       <p class="eyebrow">✓ AKTIVITA #2 ODOMKNUTÁ</p>
-      <h2 id="destination-two-heading" tabindex="-1">PLAVBA PO VISLE</h2>
+      <h2 id="destination-two-heading" tabindex="-1">SUNSET BOAT TOUR</h2>
       <div class="time time-range">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
         <strong><time datetime="18:00">18:00</time> – <time datetime="19:00">19:00</time></strong><span>MIESTNY ČAS VO VARŠAVE</span>
@@ -647,8 +649,13 @@
     </div>
   </section>
   <audio id="finale-audio" src="assets/finale.mp3" preload="metadata" playsinline></audio>
+  <audio id="main-audio" src="assets/main_song.mp3" preload="metadata" loop playsinline></audio>
+  <div class="music-controls" id="music-controls" hidden>
+    <button id="music-mute" type="button" aria-label="Stlmiť hudbu" aria-pressed="false">🔊</button>
+  </div>
 
   <script src="assets/activity-navigation.js"></script>
+  <script src="assets/background-music.js"></script>
   <script>
     (() => {
       'use strict';
@@ -757,6 +764,11 @@
         gameURL.hash = '';
         byId('exit-finale-preview').href = gameURL.href;
       }
+
+      const backgroundMusic = createBackgroundMusic({
+        preview: finalePreview,
+        finaleBlocked: finaleActivated || finaleCompleted
+      });
 
       const hints = [
         ['Som tu oveľa dlhšie ako ten Poliak.', 'Vitamín D.', 'Každé ráno ma hľadáš na oblohe.'],
@@ -1311,10 +1323,26 @@
       byId('activate-finale').addEventListener('click', () => {
         if (animating || finaleCompleted || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
         byId('finale-confirm').showModal();
+        const preparation = ++finalePreparation;
+        byId('confirm-finale').disabled = true;
+        backgroundMusic.prepareFinale().then(() => {
+          if (preparation === finalePreparation) byId('confirm-finale').disabled = false;
+        });
       });
-      byId('cancel-finale').addEventListener('click', () => byId('finale-confirm').close());
+      let finalePreparation = 0;
+      function cancelFinalePreparation() {
+        finalePreparation++;
+        byId('confirm-finale').disabled = false;
+        backgroundMusic.cancelFinale();
+      }
+      byId('cancel-finale').addEventListener('click', () => {
+        cancelFinalePreparation();
+        byId('finale-confirm').close();
+      });
+      byId('finale-confirm').addEventListener('cancel', cancelFinalePreparation);
       byId('confirm-finale').addEventListener('click', () => {
-        if (finaleRunning || finaleCompleted || !byId('finale-confirm').open || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        if (finaleRunning || finaleCompleted || byId('confirm-finale').disabled || !byId('finale-confirm').open || !stages.every(stage => stage === STAGE.UNLOCKED)) return;
+        backgroundMusic.stopForFinale();
         finaleRunning = true;
         animating = true;
         finaleActivated = true;
@@ -1488,15 +1516,17 @@
         'ZABEZPEČUJEM DIPLOMATICKÚ IMUNITU...',
         'AKTIVUJEM REŽIM ŽENÍCH...'
       ];
-      // Each message: 300ms in, 2700ms fully visible, 300ms out.
-      // Eleven messages, a 2.8s final check, then 2s at 100%.
-      const messageDuration = 3300;
+      // Absolute song timeline: 11 x 2s messages, 2s final check, 2s ready.
+      const mainSong = document.getElementById('main-audio');
+      const messageDuration = 2000;
       const finalCheckStarts = messages.length * messageDuration;
-      const loadingDuration = finalCheckStarts + 2800;
+      const loadingDuration = finalCheckStarts + 2000;
+      const menuTime = 26000;
       const progressStops = Array.from({ length: messages.length + 1 }, (_, index) => Math.round(index * 98 / messages.length));
       status.style.setProperty('--message-duration', `${messageDuration}ms`);
       let completed = false;
       let starting = false;
+      let initializing = false;
       let reviewing = false;
       let returnScroll = 0;
       let frame;
@@ -1650,42 +1680,66 @@
       }
 
       function finishInitialization() {
-        setProgress(100);
-        bootHeading.textContent = 'SYSTÉM PRIPRAVENÝ';
-        bootSuccess.hidden = false;
-        boot.classList.add('ready');
-        status.textContent = '';
-        timer = window.setTimeout(() => {
-          boot.classList.add('leaving');
-          timer = window.setTimeout(() => {
-            completed = true;
-            try { localStorage.setItem(ONBOARDING_KEY, 'complete'); } catch { /* Keep the app usable without persistent storage. */ }
-            showDashboard(true);
-          }, motion.matches ? 0 : 200);
-        }, 2000);
+        initializing = false;
+        window.cancelAnimationFrame(frame);
+        completed = true;
+        try { localStorage.setItem(ONBOARDING_KEY, 'complete'); } catch { /* Keep the app usable without persistent storage. */ }
+        showDashboard(true);
+      }
+
+      function updateInitialization() {
+        if (!initializing) return;
+        window.cancelAnimationFrame(frame);
+        const elapsed = Math.max(0, mainSong.currentTime * 1000);
+        if (elapsed >= menuTime) {
+          finishInitialization();
+          return;
+        }
+        // Keep the existing welcome exit, but include it in the song's 26s window.
+        if (elapsed >= (motion.matches ? 0 : 220)) {
+          welcome.hidden = true;
+          if (boot.hidden) {
+            boot.hidden = false;
+            bootHeading.focus({ preventScroll: true });
+          }
+        }
+        const ready = elapsed >= loadingDuration;
+        boot.classList.toggle('ready', ready);
+        boot.classList.toggle('leaving', !motion.matches && elapsed >= menuTime - 200);
+        bootSuccess.hidden = !ready;
+        if (ready) {
+          setProgress(100);
+          bootHeading.textContent = 'SYSTÉM PRIPRAVENÝ';
+          status.textContent = '';
+        } else {
+          bootHeading.textContent = 'INICIALIZUJEM BACHELOR MODE...';
+          const message = elapsed >= finalCheckStarts ? 'POSLEDNÁ KONTROLA...' : messages[Math.floor(elapsed / messageDuration)];
+          const changed = setStatus(message);
+          // Reduced motion keeps static progress steps and the same media timeline.
+          if (!motion.matches || changed) setProgress(loadingProgress(elapsed));
+          // Keep message fades aligned too, including after buffering or a tab return.
+          for (const animation of status.getAnimations()) {
+            if (animation.animationName !== 'status-message') continue;
+            animation.pause();
+            animation.currentTime = elapsed % messageDuration;
+          }
+        }
+        if (!document.hidden) frame = window.requestAnimationFrame(updateInitialization);
       }
 
       function initialize() {
-        welcome.hidden = true;
+        initializing = true;
         boot.classList.remove('leaving', 'ready');
         bootSuccess.hidden = true;
-        boot.hidden = false;
         bootHeading.textContent = 'INICIALIZUJEM BACHELOR MODE...';
-        bootHeading.focus({ preventScroll: true });
         setStatus(messages[0], true);
         setProgress(0);
-        const startedAt = performance.now();
-        function update(now) {
-          const elapsed = Math.min(loadingDuration, now - startedAt);
-          const message = elapsed >= finalCheckStarts ? 'POSLEDNÁ KONTROLA...' : messages[Math.floor(elapsed / messageDuration)];
-          const changed = setStatus(message);
-          // Reduced motion keeps the full timeline, with static steps at each message.
-          if (!motion.matches || changed) setProgress(loadingProgress(elapsed));
-          if (elapsed < loadingDuration) frame = window.requestAnimationFrame(update);
-          else finishInitialization();
-        }
-        frame = window.requestAnimationFrame(update);
+        updateInitialization();
       }
+
+      ['timeupdate', 'seeked', 'playing', 'pause'].forEach(name => mainSong.addEventListener(name, updateInitialization));
+      document.addEventListener('visibilitychange', updateInitialization);
+      window.addEventListener('pageshow', updateInitialization);
 
       startButton.addEventListener('click', () => {
         if (starting) return;
@@ -1695,9 +1749,10 @@
         }
         starting = true;
         startButton.disabled = true;
+        window.dispatchEvent(new Event('bachelor:started'));
         welcome.inert = true;
         welcome.classList.add('leaving');
-        timer = window.setTimeout(initialize, motion.matches ? 0 : 220);
+        initialize();
       });
 
       helpButton.addEventListener('click', () => showWelcome(true));
@@ -1709,6 +1764,7 @@
         window.clearTimeout(timer);
         completed = false;
         starting = false;
+        initializing = false;
         try {
           localStorage.removeItem(ONBOARDING_KEY);
           localStorage.removeItem(COLD_OPEN_KEY);

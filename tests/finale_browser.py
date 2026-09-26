@@ -30,6 +30,7 @@ def new_page(browser, *, reduced=False, fail=False, seed=SEED):
         window.playCalls = [];
         const originalPlay = HTMLMediaElement.prototype.play;
         HTMLMediaElement.prototype.play = function() {
+            if (this.id !== 'finale-audio') return originalPlay.call(this);
             window.playCalls.push({time: this.currentTime, gesture: navigator.userActivation.isActive});
             return %s ? Promise.reject(new Error('test playback failure')) : originalPlay.call(this);
         };
